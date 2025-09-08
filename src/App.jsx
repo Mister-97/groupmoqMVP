@@ -1,25 +1,49 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, DollarSign, ShieldCheck, Users, Factory, Timer, Plus, Search, BarChart3, X, Info, Lock, ClipboardCheck, Ship, Tag as TagIcon, FileText } from "lucide-react";
+import {
+  CheckCircle2,
+  DollarSign,
+  ShieldCheck,
+  Users,
+  Factory,
+  Timer,
+  Plus,
+  Search,
+  BarChart3,
+  X,
+  Info,
+  Tag as TagIcon,
+} from "lucide-react";
 
-// Simple UI Components (replacing the missing @/components/ui imports)
-const Button = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }) => {
-  const baseClasses = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+/* ------------------------ Minimal UI Primitives ------------------------ */
+
+const Button = ({
+  children,
+  variant = "default",
+  size = "default",
+  className = "",
+  disabled = false,
+  onClick,
+  style,
+  ...props
+}) => {
+  const base =
+    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
-    default: "bg-blue-600 text-white hover:bg-blue-700",
-    outline: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
-    ghost: "text-gray-700 hover:bg-gray-100"
+    default: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+    outline:
+      "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500",
+    ghost:
+      "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-blue-500",
   };
-  const sizes = {
-    default: "px-4 py-2",
-    lg: "px-6 py-3 text-base"
-  };
-  
+  const sizes = { default: "px-4 py-2", lg: "px-6 py-3 text-base" };
+
   return (
-    <button 
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
+    <button
+      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled}
       onClick={onClick}
+      style={style}
       {...props}
     >
       {children}
@@ -27,41 +51,43 @@ const Button = ({ children, variant = "default", size = "default", className = "
   );
 };
 
-const Card = ({ children, className = "" }) => (
-  <div className={`bg-white border border-gray-200 rounded-lg shadow-sm ${className}`}>
+const Card = ({ children, className = "", style }) => (
+  <div
+    className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${className}`}
+    style={style}
+  >
     {children}
   </div>
 );
 
 const CardHeader = ({ children, className = "" }) => (
-  <div className={`px-6 py-4 ${className}`}>
-    {children}
-  </div>
+  <div className={`px-6 py-4 ${className}`}>{children}</div>
 );
 
 const CardTitle = ({ children, className = "", style }) => (
-  <h3 className={`text-lg font-semibold leading-none tracking-tight ${className}`} style={style}>
+  <h3
+    className={`text-lg font-semibold leading-none tracking-tight ${className}`}
+    style={style}
+  >
     {children}
   </h3>
 );
 
 const CardContent = ({ children, className = "" }) => (
-  <div className={`px-6 pb-4 ${className}`}>
-    {children}
-  </div>
+  <div className={`px-6 pb-5 ${className}`}>{children}</div>
 );
 
 const Input = ({ className = "", ...props }) => (
-  <input 
+  <input
     className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className}`}
     {...props}
   />
 );
 
-const Textarea = ({ className = "", ...props }) => (
-  <textarea 
+const Textarea = ({ className = "", rows = 3, ...props }) => (
+  <textarea
     className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className}`}
-    rows={3}
+    rows={rows}
     {...props}
   />
 );
@@ -69,18 +95,23 @@ const Textarea = ({ className = "", ...props }) => (
 const Badge = ({ children, variant = "default", className = "", style }) => {
   const variants = {
     default: "bg-blue-100 text-blue-800",
-    secondary: "bg-gray-100 text-gray-800"
+    secondary: "bg-gray-100 text-gray-800",
   };
-  
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`} style={style}>
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}
+      style={style}
+    >
       {children}
     </span>
   );
 };
 
 const Label = ({ children, htmlFor, className = "" }) => (
-  <label htmlFor={htmlFor} className={`block text-sm font-medium text-gray-700 mb-1 ${className}`}>
+  <label
+    htmlFor={htmlFor}
+    className={`block text-sm font-medium text-gray-700 mb-1 ${className}`}
+  >
     {children}
   </label>
 );
@@ -92,25 +123,28 @@ const Switch = ({ id, checked, onCheckedChange }) => (
     aria-checked={checked}
     onClick={() => onCheckedChange(!checked)}
     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-      checked ? 'bg-blue-600' : 'bg-gray-200'
+      checked ? "bg-blue-600" : "bg-gray-200"
     }`}
   >
-    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-      checked ? 'translate-x-6' : 'translate-x-1'
-    }`} />
+    <span
+      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+        checked ? "translate-x-6" : "translate-x-1"
+      }`}
+    />
   </button>
 );
 
 const Progress = ({ value, className = "" }) => (
   <div className={`w-full bg-gray-200 rounded-full h-2 ${className}`}>
-    <div 
+    <div
       className="h-2 rounded-full transition-all duration-300 bg-green-500"
       style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
     />
   </div>
 );
 
-// ---------- BRAND PALETTE ----------
+/* ----------------------------- Brand System ---------------------------- */
+
 const COLORS = {
   navy: "#1F3C88",
   amber: "#F0A92D",
@@ -121,22 +155,32 @@ const COLORS = {
   charcoal: "#333333",
 };
 
-// ---------- SIMPLE CUSTOMIZATION OPTIONS (MVP) ----------
+const CATEGORIES = [
+  "Textiles",
+  "Hair & Beauty",
+  "Footwear",
+  "Electronics",
+  "Food & Beverage",
+  "Packaging",
+];
+
 const CUSTOM_OPTIONS = [
   { id: "neck_label", name: "Private label neck print", perUnit: 0.35, setupFee: 80 },
   { id: "hangtag", name: "Hangtag set (tag+string+barcode)", perUnit: 1.2, setupFee: 60 },
 ];
 
-const CATEGORIES = ["Textiles", "Hair & Beauty", "Footwear", "Electronics", "Food & Beverage", "Packaging"];
 const PLATFORM_FEE_RATE = 0.03;
-const DEFAULT_QC_HOLDBACK_RATE = 0.10;
-const USA_ONLY = true;
+const DEFAULT_QC_HOLDBACK_RATE = 0.1;
 
-function currency(n) {
-  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
-}
+const currency = (n) =>
+  new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(n);
 
-// ---------- Seed Pools ----------
+/* ------------------------------ Seed Pools ----------------------------- */
+
 const seedPools = [
   {
     id: "p1",
@@ -208,15 +252,18 @@ const seedPools = [
   },
 ];
 
-// ---------- UI Components ----------
+/* ------------------------------ Small Bits ----------------------------- */
+
 const Stat = ({ icon: Icon, label, value }) => (
   <div className="flex items-center gap-3">
     <div className="rounded-2xl p-2" style={{ backgroundColor: COLORS.grayBg }}>
       <Icon className="w-5 h-5" style={{ color: COLORS.navy }} />
     </div>
     <div>
-      <div className="text-sm" style={{ color: "#6B7280" }}>{label}</div>
-      <div className="font-semibold" style={{ color: COLORS.charcoal }}>{value}</div>
+      <div className="text-sm text-gray-500">{label}</div>
+      <div className="font-semibold" style={{ color: COLORS.charcoal }}>
+        {value}
+      </div>
     </div>
   </div>
 );
@@ -237,7 +284,7 @@ const Pill = ({ children, active, onClick }) => (
 
 function Countdown({ deadline }) {
   const [now, setNow] = useState(Date.now());
-  React.useEffect(() => {
+  useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
@@ -245,17 +292,31 @@ function Countdown({ deadline }) {
   const days = Math.floor(left / (1000 * 60 * 60 * 24));
   const hours = Math.floor((left / (1000 * 60 * 60)) % 24);
   const mins = Math.floor((left / (1000 * 60)) % 60);
-  return <span>{days}d {hours}h {mins}m</span>;
+  return (
+    <span>
+      {days}d {hours}h {mins}m
+    </span>
+  );
 }
 
 function Modal({ open, onClose, title, children }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" role="dialog" aria-modal="true">
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b p-4">
-          <h3 className="font-semibold text-lg" style={{ color: COLORS.navy }}>{title}</h3>
-          <button onClick={onClose} aria-label="Close" className="p-1 rounded hover:bg-gray-100">
+          <h3 className="font-semibold text-lg" style={{ color: COLORS.navy }}>
+            {title}
+          </h3>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="p-1 rounded hover:bg-gray-100"
+          >
             <X className="w-5 h-5" style={{ color: COLORS.navy }} />
           </button>
         </div>
@@ -265,7 +326,8 @@ function Modal({ open, onClose, title, children }) {
   );
 }
 
-// ---------- Join Pool Form ----------
+/* ----------------------------- Join Pool Form ---------------------------- */
+
 function JoinPoolForm({ pool, onSubmit }) {
   const [units, setUnits] = useState(pool.minPledgeUnits);
   const [accept, setAccept] = useState(false);
@@ -273,17 +335,18 @@ function JoinPoolForm({ pool, onSubmit }) {
   const [selected, setSelected] = useState([]);
   const [notes, setNotes] = useState("");
 
-  function toggle(id) {
-    setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-  }
+  const toggle = (id) =>
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
 
   const productSubtotal = units * pool.unitPrice;
   const addonPerUnit = selected.reduce((sum, id) => {
-    const opt = CUSTOM_OPTIONS.find(o => o.id === id);
+    const opt = CUSTOM_OPTIONS.find((o) => o.id === id);
     return sum + (opt ? opt.perUnit : 0);
   }, 0);
   const addonSetup = selected.reduce((sum, id) => {
-    const opt = CUSTOM_OPTIONS.find(o => o.id === id);
+    const opt = CUSTOM_OPTIONS.find((o) => o.id === id);
     return sum + (opt ? opt.setupFee : 0);
   }, 0);
   const addonSubtotal = Math.round(units * addonPerUnit);
@@ -299,41 +362,84 @@ function JoinPoolForm({ pool, onSubmit }) {
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <Label>Units to pledge (min {pool.minPledgeUnits})</Label>
-          <Input type="number" min={pool.minPledgeUnits} value={units} onChange={e => setUnits(Math.max(pool.minPledgeUnits, Number(e.target.value || 0)))} />
-          <p className="text-xs mt-1" style={{ color: "#6B7280" }}>You can edit or cancel before the pool locks.</p>
+          <Input
+            type="number"
+            min={pool.minPledgeUnits}
+            value={units}
+            onChange={(e) =>
+              setUnits(Math.max(pool.minPledgeUnits, Number(e.target.value || 0)))
+            }
+          />
+          <p className="text-xs mt-1 text-gray-500">
+            You can edit or cancel before the pool locks.
+          </p>
           {willOverflow && (
-            <div className="mt-2 text-xs border rounded-md p-2" style={{ color: COLORS.warning, backgroundColor: "#FFF5ED", borderColor: "#FED7AA" }}>
-              This pledge exceeds remaining capacity by <b>{overflow}</b> units. Extra units will be {autoWaitlist ? "auto-waitlisted for Batch #2." : "declined."}
+            <div
+              className="mt-2 text-xs border rounded-md p-2"
+              style={{
+                color: COLORS.warning,
+                backgroundColor: "#FFF5ED",
+                borderColor: "#FED7AA",
+              }}
+            >
+              This pledge exceeds remaining capacity by <b>{overflow}</b> units. Extra
+              units will be {autoWaitlist ? "auto-waitlisted for Batch #2." : "declined."}
               <div className="flex items-center gap-2 mt-2">
-                <Switch id="waitlist" checked={autoWaitlist} onCheckedChange={setAutoWaitlist} />
-                <Label htmlFor="waitlist" className="text-xs">Auto-waitlist overflow</Label>
+                <Switch
+                  id="waitlist"
+                  checked={autoWaitlist}
+                  onCheckedChange={setAutoWaitlist}
+                />
+                <Label htmlFor="waitlist" className="text-xs">
+                  Auto-waitlist overflow
+                </Label>
               </div>
             </div>
           )}
         </div>
         <div>
           <Label>Estimated Cost (authorization at pledge)</Label>
-          <div className="text-2xl font-semibold mt-1" style={{ color: COLORS.charcoal }}>{currency(estTotal)}</div>
-          <div className="text-xs space-y-1 mt-1" style={{ color: "#6B7280" }}>
-            <div>Base: {currency(productSubtotal)} • Add-ons: {currency(addonSubtotal)} • Setup: {currency(addonSetup)} • Platform fee: {currency(platformFee)}</div>
+          <div className="text-2xl font-semibold mt-1" style={{ color: COLORS.charcoal }}>
+            {currency(estTotal)}
+          </div>
+          <div className="text-xs space-y-1 mt-1 text-gray-600">
+            <div>
+              Base: {currency(productSubtotal)} • Add-ons: {currency(addonSubtotal)} •
+              Setup: {currency(addonSetup)} • Platform fee: {currency(platformFee)}
+            </div>
           </div>
         </div>
       </div>
 
       {pool.allowsCustomization && (
-        <div className="rounded-md border p-3" style={{ backgroundColor: COLORS.grayBg, borderColor: "#E5E7EB" }}>
+        <div
+          className="rounded-md border p-3"
+          style={{ backgroundColor: COLORS.grayBg, borderColor: "#E5E7EB" }}
+        >
           <div className="flex items-center gap-2 mb-2">
             <TagIcon className="w-4 h-4" style={{ color: COLORS.navy }} />
-            <span className="font-medium" style={{ color: COLORS.charcoal }}>Optional private label add‑ons</span>
+            <span className="font-medium" style={{ color: COLORS.charcoal }}>
+              Optional private label add-ons
+            </span>
           </div>
-          <div className="space-y-2 text-sm" style={{ color: "#374151" }}>
-            {CUSTOM_OPTIONS.map(opt => (
-              <label key={opt.id} className="flex items-center justify-between gap-3 py-2 px-2 rounded-md bg-white border" style={{ borderColor: "#E5E7EB" }}>
+          <div className="space-y-2 text-sm text-gray-700">
+            {CUSTOM_OPTIONS.map((opt) => (
+              <label
+                key={opt.id}
+                className="flex items-center justify-between gap-3 py-2 px-2 rounded-md bg-white border"
+                style={{ borderColor: "#E5E7EB" }}
+              >
                 <div className="flex items-center gap-3">
-                  <input type="checkbox" checked={selected.includes(opt.id)} onChange={() => toggle(opt.id)} />
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(opt.id)}
+                    onChange={() => toggle(opt.id)}
+                  />
                   <div>
                     <div className="font-medium">{opt.name}</div>
-                    <div className="text-xs text-gray-500">+{currency(opt.perUnit)} / unit • Setup {currency(opt.setupFee)}</div>
+                    <div className="text-xs text-gray-500">
+                      +{currency(opt.perUnit)} / unit • Setup {currency(opt.setupFee)}
+                    </div>
                   </div>
                 </div>
               </label>
@@ -341,7 +447,11 @@ function JoinPoolForm({ pool, onSubmit }) {
           </div>
           <div className="mt-3">
             <Label>Notes / brand instructions (optional)</Label>
-            <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Upload artwork after lock via emailed link..." />
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Upload artwork after lock via emailed link..."
+            />
           </div>
         </div>
       )}
@@ -349,7 +459,10 @@ function JoinPoolForm({ pool, onSubmit }) {
       <div className="flex items-center gap-3">
         <Switch id="accept" checked={accept} onCheckedChange={setAccept} />
         <Label htmlFor="accept" className="text-sm">
-          I agree to the <span className="underline cursor-pointer" style={{ color: COLORS.navy }}>Pool Terms</span>
+          I agree to the{" "}
+          <span className="underline cursor-pointer" style={{ color: COLORS.navy }}>
+            Pool Terms
+          </span>
         </Label>
       </div>
 
@@ -358,7 +471,18 @@ function JoinPoolForm({ pool, onSubmit }) {
         <Button
           style={{ backgroundColor: COLORS.amber, color: "#fff" }}
           disabled={!accept || units < pool.minPledgeUnits}
-          onClick={() => onSubmit({ units, total: estTotal, overflow, autoWaitlist, selected, notes, addonSubtotal, addonSetup })}
+          onClick={() =>
+            onSubmit({
+              units,
+              total: estTotal,
+              overflow,
+              autoWaitlist,
+              selected,
+              notes,
+              addonSubtotal,
+              addonSetup,
+            })
+          }
         >
           Confirm Pledge
         </Button>
@@ -367,7 +491,8 @@ function JoinPoolForm({ pool, onSubmit }) {
   );
 }
 
-// ---------- Create Pool ----------
+/* ----------------------------- Create Pool ----------------------------- */
+
 function CreatePool({ onCreate }) {
   const [form, setForm] = useState({
     title: "",
@@ -381,23 +506,24 @@ function CreatePool({ onCreate }) {
     badges: "Factory-verified, Trade Assurance",
     allowsCustomization: true,
   });
-  
-  function update(k, v) { 
-    setForm(prev => ({ ...prev, [k]: v })); 
-  }
 
-  function submit() {
+  const update = (k, v) => setForm((prev) => ({ ...prev, [k]: v }));
+
+  const submit = () => {
     const id = Math.random().toString(36).slice(2);
     onCreate({
       id,
-      title: form.title,
-      supplier: form.supplier,
+      title: form.title || "Untitled Pool",
+      supplier: form.supplier || "Supplier",
       category: form.category,
-      moqUnits: Number(form.moqUnits),
-      minPledgeUnits: Number(form.minPledgeUnits),
-      unitPrice: Number(form.unitPrice),
-      deadline: Date.now() + Number(form.deadlineDays) * 86400000,
-      badges: form.badges.split(",").map(s => s.trim()).filter(Boolean),
+      moqUnits: Number(form.moqUnits) || 0,
+      minPledgeUnits: Number(form.minPledgeUnits) || 0,
+      unitPrice: Number(form.unitPrice) || 0,
+      deadline: Date.now() + (Number(form.deadlineDays) || 0) * 86400000,
+      badges: (form.badges || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
       specs: form.specs,
       joinedUnits: 0,
       watchers: 0,
@@ -405,7 +531,7 @@ function CreatePool({ onCreate }) {
       state: "OPEN",
       allowsCustomization: !!form.allowsCustomization,
     });
-  }
+  };
 
   return (
     <Card>
@@ -416,39 +542,75 @@ function CreatePool({ onCreate }) {
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <Label>Product Name</Label>
-            <Input value={form.title} onChange={e => update("title", e.target.value)} placeholder="e.g., 100% Cotton T-Shirts" />
+            <Input
+              value={form.title}
+              onChange={(e) => update("title", e.target.value)}
+              placeholder="e.g., 100% Cotton T-Shirts"
+            />
           </div>
           <div>
             <Label>Category</Label>
-            <select className="w-full h-10 rounded-md border px-3" value={form.category} onChange={e => update("category", e.target.value)}>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            <select
+              className="w-full h-10 rounded-md border px-3"
+              value={form.category}
+              onChange={(e) => update("category", e.target.value)}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </div>
           <div>
             <Label>Supplier</Label>
-            <Input value={form.supplier} onChange={e => update("supplier", e.target.value)} placeholder="Factory / Mill / Vendor" />
+            <Input
+              value={form.supplier}
+              onChange={(e) => update("supplier", e.target.value)}
+              placeholder="Factory / Mill / Vendor"
+            />
           </div>
           <div className="grid grid-cols-4 gap-3">
             <div>
               <Label>MOQ</Label>
-              <Input type="number" value={form.moqUnits} onChange={e => update("moqUnits", e.target.value)} />
+              <Input
+                type="number"
+                value={form.moqUnits}
+                onChange={(e) => update("moqUnits", e.target.value)}
+              />
             </div>
             <div>
               <Label>Min pledge</Label>
-              <Input type="number" value={form.minPledgeUnits} onChange={e => update("minPledgeUnits", e.target.value)} />
+              <Input
+                type="number"
+                value={form.minPledgeUnits}
+                onChange={(e) => update("minPledgeUnits", e.target.value)}
+              />
             </div>
             <div>
               <Label>Unit price</Label>
-              <Input type="number" value={form.unitPrice} onChange={e => update("unitPrice", e.target.value)} />
+              <Input
+                type="number"
+                value={form.unitPrice}
+                onChange={(e) => update("unitPrice", e.target.value)}
+              />
             </div>
             <div>
               <Label>Days</Label>
-              <Input type="number" value={form.deadlineDays} onChange={e => update("deadlineDays", e.target.value)} />
+              <Input
+                type="number"
+                value={form.deadlineDays}
+                onChange={(e) => update("deadlineDays", e.target.value)}
+              />
             </div>
           </div>
           <div className="md:col-span-2">
             <Label>Specs</Label>
-            <Textarea value={form.specs} onChange={e => update("specs", e.target.value)} placeholder="Sizes, materials, colors..." />
+            <Textarea
+              value={form.specs}
+              onChange={(e) => update("specs", e.target.value)}
+              placeholder="Sizes, materials, colors..."
+            />
           </div>
         </div>
         <div className="flex items-center justify-end">
@@ -464,9 +626,13 @@ function CreatePool({ onCreate }) {
   );
 }
 
-// ---------- Pool Card ----------
+/* ------------------------------ Pool Card ------------------------------ */
+
 function PoolCard({ pool, onJoin, onLock }) {
-  const pct = Math.min(100, Math.round((pool.joinedUnits / pool.moqUnits) * 100));
+  const pct =
+    pool.moqUnits > 0
+      ? Math.min(100, Math.round((pool.joinedUnits / pool.moqUnits) * 100))
+      : 0;
   const remaining = Math.max(0, pool.moqUnits - pool.joinedUnits);
 
   return (
@@ -474,37 +640,55 @@ function PoolCard({ pool, onJoin, onLock }) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>{pool.title}</CardTitle>
-            <div className="mt-1 text-sm" style={{ color: "#6B7280" }}>
-              by {pool.supplier} • <span className="font-medium" style={{ color: COLORS.navy }}>{pool.category}</span>
+            <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>
+              {pool.title}
+            </CardTitle>
+            <div className="mt-1 text-sm text-gray-500">
+              by {pool.supplier} •{" "}
+              <span className="font-medium" style={{ color: COLORS.navy }}>
+                {pool.category}
+              </span>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap justify-end">
-            <span className="text-xs px-2 py-1 rounded-full border" style={{ backgroundColor: COLORS.grayBg, color: COLORS.charcoal, borderColor: "#E5E7EB" }}>
+            <span
+              className="text-xs px-2 py-1 rounded-full border"
+              style={{
+                backgroundColor: COLORS.grayBg,
+                color: COLORS.charcoal,
+                borderColor: "#E5E7EB",
+              }}
+            >
               {pool.state ?? "OPEN"}
             </span>
-            {pool.allowsCustomization && <Badge variant="secondary" style={{ color: COLORS.navy }}>Private label</Badge>}
+            {pool.allowsCustomization && (
+              <Badge variant="secondary" style={{ color: COLORS.navy }}>
+                Private label
+              </Badge>
+            )}
             {pool.badges?.slice(0, 2).map((b, i) => (
-              <Badge key={i} variant="secondary" style={{ color: COLORS.navy }}>{b}</Badge>
+              <Badge key={i} variant="secondary" style={{ color: COLORS.navy }}>
+                {b}
+              </Badge>
             ))}
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="text-sm" style={{ color: "#4B5563" }}>{pool.specs}</div>
+        <div className="text-sm text-gray-700">{pool.specs}</div>
         <div className="grid grid-cols-3 gap-3">
           <Stat icon={Users} label="Joined" value={`${pool.joinedUnits} / ${pool.moqUnits}`} />
           <Stat icon={DollarSign} label="Unit Price" value={currency(pool.unitPrice)} />
           <Stat icon={Timer} label="Time left" value={<Countdown deadline={pool.deadline} />} />
         </div>
-
         <Progress value={pct} />
-
         <div className="flex items-center justify-between text-sm">
-          <div style={{ color: "#6B7280" }}>{remaining} units to MOQ</div>
+          <div className="text-gray-500">{remaining} units to MOQ</div>
         </div>
         <div className="flex items-center justify-between pt-2">
-          <div className="text-xs" style={{ color: "#6B7280" }}>Platform fee {Math.round(PLATFORM_FEE_RATE * 100)}%</div>
+          <div className="text-xs text-gray-500">
+            Platform fee {Math.round(PLATFORM_FEE_RATE * 100)}%
+          </div>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -517,6 +701,13 @@ function PoolCard({ pool, onJoin, onLock }) {
               style={{ backgroundColor: COLORS.amber, color: "#fff" }}
               onClick={() => onLock(pool.id)}
               disabled={pool.joinedUnits < pool.moqUnits || pool.state !== "OPEN"}
+              title={
+                pool.state !== "OPEN"
+                  ? "Pool already locked"
+                  : pool.joinedUnits < pool.moqUnits
+                  ? "MOQ not reached yet"
+                  : "Lock this pool"
+              }
             >
               Lock Pool
             </Button>
@@ -527,21 +718,29 @@ function PoolCard({ pool, onJoin, onLock }) {
   );
 }
 
-// ---------- Hero ----------
+/* --------------------------------- Hero -------------------------------- */
+
 function Hero({ onCTAClick }) {
   return (
     <section
       className="relative overflow-hidden rounded-3xl p-8 md:p-12"
-      style={{ background: `linear-gradient(135deg, ${COLORS.navy} 0%, ${COLORS.amber} 100%)` }}
+      style={{
+        background: `linear-gradient(135deg, ${COLORS.navy} 0%, ${COLORS.amber} 100%)`,
+      }}
     >
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
             Factory pricing, without factory MOQs.
           </h1>
           <p className="mt-2 text-lg text-white/90">Power in numbers, savings in bulk.</p>
           <p className="mt-4 text-lg text-white/90">
-            Join forces with other U.S. brands to meet high minimum order quantities. Pledge what you need—we pool the rest.
+            Join forces with other U.S. brands to meet high minimum order quantities.
+            Pledge what you need—we pool the rest.
           </p>
           <div className="mt-6 flex gap-3">
             <Button
@@ -554,15 +753,26 @@ function Hero({ onCTAClick }) {
             <Button
               size="lg"
               variant="outline"
-              style={{ borderColor: "#ffffff", color: "#ffffff" }}
+              className="border-white text-white hover:bg-white/10"
+              style={{ borderColor: "#ffffff" }}
+              onClick={() => {
+                const el = document.getElementById("pools");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
             >
               Browse Pools
             </Button>
           </div>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-white">
-            <div className="flex items-center gap-3"><ShieldCheck className="w-5 h-5" /><span>Escrow-backed</span></div>
-            <div className="flex items-center gap-3"><Factory className="w-5 h-5" /><span>Verified suppliers</span></div>
-            <div className="flex items-center gap-3"><BarChart3 className="w-5 h-5" /><span>Transparent progress</span></div>
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5" /> <span>Escrow-backed</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Factory className="w-5 h-5" /> <span>Verified suppliers</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <BarChart3 className="w-5 h-5" /> <span>Transparent progress</span>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -570,7 +780,8 @@ function Hero({ onCTAClick }) {
   );
 }
 
-// ---------- Main App ----------
+/* --------------------------------- App --------------------------------- */
+
 export default function App() {
   const [pools, setPools] = useState(seedPools);
   const [query, setQuery] = useState("");
@@ -579,54 +790,85 @@ export default function App() {
   const [joining, setJoining] = useState(null);
   const [banner, setBanner] = useState("");
 
-  const filtered = useMemo(() => pools.filter(p => {
-    const matchesText = `${p.title} ${p.supplier} ${p.specs}`.toLowerCase().includes(query.toLowerCase());
-    const matchesCat = cat === "All" || p.category === cat;
-    return matchesText && matchesCat;
-  }), [pools, query, cat]);
+  const filtered = useMemo(
+    () =>
+      pools.filter((p) => {
+        const hay = `${p.title} ${p.supplier} ${p.specs}`.toLowerCase();
+        const matchesText = hay.includes(query.toLowerCase());
+        const matchesCat = cat === "All" || p.category === cat;
+        return matchesText && matchesCat;
+      }),
+    [pools, query, cat]
+  );
 
-  function flash(msg, ms = 4200) {
+  const flash = (msg, ms = 4200) => {
     setBanner(msg);
-    setTimeout(() => setBanner(""), ms);
-  }
+    window.clearTimeout((flash._t || 0));
+    flash._t = window.setTimeout(() => setBanner(""), ms);
+  };
 
-  function handleCreate(newPool) {
-    setPools(prev => [newPool, ...prev]);
+  const handleCreate = (newPool) => {
+    setPools((prev) => [newPool, ...prev]);
     setShowCreate(false);
     flash("Pool published! Invite buyers to pledge before it locks.");
-  }
+  };
 
-  function handleJoinSubmit({ units, total, overflow, autoWaitlist, selected, notes, addonSubtotal, addonSetup }) {
+  const handleJoinSubmit = ({
+    units,
+    total,
+    overflow,
+    autoWaitlist,
+    selected,
+    notes,
+  }) => {
     if (!joining) return;
-    setPools(prev => prev.map(p => {
-      if (p.id !== joining.id) return p;
-      const remaining = Math.max(0, p.moqUnits - p.joinedUnits);
-      const addNow = Math.min(units, remaining);
-      return { ...p, joinedUnits: p.joinedUnits + addNow, watchers: p.watchers + 1 };
-    }));
+    setPools((prev) =>
+      prev.map((p) => {
+        if (p.id !== joining.id) return p;
+        const remaining = Math.max(0, p.moqUnits - p.joinedUnits);
+        const addNow = Math.min(units, remaining);
+        return {
+          ...p,
+          joinedUnits: p.joinedUnits + addNow,
+          watchers: p.watchers + 1,
+        };
+      })
+    );
     setJoining(null);
     flash(`Pledge authorized: ${units} units • Est: ${currency(total)}`);
-  }
+    // selected, notes, overflow, autoWaitlist would be persisted server-side in real app
+  };
 
-  function handleLock(poolId) {
-    setPools(prev => prev.map(p => {
-      if (p.id !== poolId) return p;
-      if (p.joinedUnits >= p.moqUnits && p.state === "OPEN") {
-        return { ...p, state: "LOCKED" };
-      }
-      return p;
-    }));
+  const handleLock = (poolId) => {
+    setPools((prev) =>
+      prev.map((p) => {
+        if (p.id !== poolId) return p;
+        if (p.joinedUnits >= p.moqUnits && p.state === "OPEN") {
+          return { ...p, state: "LOCKED" };
+        }
+        return p;
+      })
+    );
     flash("Pool locked. Capturing authorizations and funding Escrow.com.");
-  }
+  };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: COLORS.grayBg, color: COLORS.charcoal }}>
-      <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b" style={{ borderColor: "#E5E7EB" }}>
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: COLORS.grayBg, color: COLORS.charcoal }}
+    >
+      <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
-          <div className="font-extrabold text-xl tracking-tight" style={{ color: COLORS.navy }}>GroupMOQ</div>
+          <div className="font-extrabold text-xl tracking-tight" style={{ color: COLORS.navy }}>
+            GroupMOQ
+          </div>
           <nav className="hidden md:flex items-center gap-6 text-sm">
-            <a className="hover:underline" style={{ color: COLORS.charcoal }} href="#how">How it works</a>
-            <a className="hover:underline" style={{ color: COLORS.charcoal }} href="#pools">Active pools</a>
+            <a className="hover:underline text-gray-800" href="#how">
+              How it works
+            </a>
+            <a className="hover:underline text-gray-800" href="#pools">
+              Active pools
+            </a>
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <Button
@@ -636,17 +878,19 @@ export default function App() {
             >
               <Plus className="w-4 h-4 mr-1" /> Create pool
             </Button>
-            <Button
-              style={{ backgroundColor: COLORS.amber, color: "#fff" }}
-            >
+            <Button style={{ backgroundColor: COLORS.amber, color: "#fff" }}>
               Sign in
             </Button>
           </div>
         </div>
         {banner && (
-          <div style={{ backgroundColor: "#EAF9F0", borderTop: "1px solid #C7EFD8" }}>
-            <div className="max-w-6xl mx-auto px-4 py-2 text-sm flex items-center gap-2" style={{ color: COLORS.emerald }}>
-              <CheckCircle2 className="w-4 h-4" />{banner}
+          <div className="border-t" style={{ backgroundColor: "#EAF9F0", borderColor: "#C7EFD8" }}>
+            <div
+              className="max-w-6xl mx-auto px-4 py-2 text-sm flex items-center gap-2"
+              style={{ color: COLORS.emerald }}
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {banner}
             </div>
           </div>
         )}
@@ -657,27 +901,36 @@ export default function App() {
 
         {/* How it works */}
         <section id="how" className="grid md:grid-cols-3 gap-4">
-          {[{
-            icon: Users,
-            title: "Post or join a pool",
-            text: "Describe the item, target MOQ, unit price, and deadline. Or join an existing pool in your niche.",
-          },{
-            icon: DollarSign,
-            title: "Pledge safely",
-            text: "Funds are authorized at pledge. When MOQ is hit, authorizations capture and funds move to Escrow.com.",
-          },{
-            icon: ShieldCheck,
-            title: "QC & release",
-            text: "QC holdback protects you. On delivery acceptance or arrival at port, escrow releases to supplier.",
-          }].map((s, i) => (
-            <Card key={i} className="border" style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF" }}>
+          {[
+            {
+              icon: Users,
+              title: "Post or join a pool",
+              text:
+                "Describe the item, target MOQ, unit price, and deadline. Or join an existing pool in your niche.",
+            },
+            {
+              icon: DollarSign,
+              title: "Pledge safely",
+              text:
+                "Funds are authorized at pledge. When MOQ is hit, authorizations capture and funds move to Escrow.com.",
+            },
+            {
+              icon: ShieldCheck,
+              title: "QC & release",
+              text:
+                "QC holdback protects you. On delivery acceptance or arrival at port, escrow releases to supplier.",
+            },
+          ].map((s, i) => (
+            <Card key={i} style={{ backgroundColor: "#FFFFFF" }}>
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <s.icon className="w-5 h-5" style={{ color: COLORS.navy }} />
-                  <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>{s.title}</CardTitle>
+                  <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>
+                    {s.title}
+                  </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="text-sm" style={{ color: "#4B5563" }}>{s.text}</CardContent>
+              <CardContent className="text-sm text-gray-700">{s.text}</CardContent>
             </Card>
           ))}
         </section>
@@ -686,13 +939,23 @@ export default function App() {
         <section className="space-y-4" id="pools">
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="relative md:w-1/2">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#9CA3AF" }} />
-              <Input className="pl-9" placeholder="Search products, suppliers, specs…" value={query} onChange={e => setQuery(e.target.value)} />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Input
+                className="pl-9"
+                placeholder="Search products, suppliers, specs…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                aria-label="Search pools"
+              />
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <Pill active={cat === "All"} onClick={() => setCat("All")}>All</Pill>
-              {CATEGORIES.map(c => (
-                <Pill key={c} active={cat === c} onClick={() => setCat(c)}>{c}</Pill>
+              <Pill active={cat === "All"} onClick={() => setCat("All")}>
+                All
+              </Pill>
+              {CATEGORIES.map((c) => (
+                <Pill key={c} active={cat === c} onClick={() => setCat(c)}>
+                  {c}
+                </Pill>
               ))}
             </div>
             <div className="md:ml-auto">
@@ -707,7 +970,7 @@ export default function App() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map(p => (
+            {filtered.map((p) => (
               <PoolCard key={p.id} pool={p} onJoin={setJoining} onLock={handleLock} />
             ))}
           </div>
@@ -715,14 +978,17 @@ export default function App() {
 
         {/* Trust & Escrow */}
         <section id="trust" className="grid lg:grid-cols-2 gap-6">
-          <Card className="border" style={{ borderColor: "#E5E7EB" }}>
+          <Card>
             <CardHeader>
               <CardTitle style={{ color: COLORS.navy }}>Trust & Escrow</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm" style={{ color: "#4B5563" }}>
+            <CardContent className="space-y-3 text-sm text-gray-700">
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 w-4 h-4" style={{ color: COLORS.navy }} />
-                <p>Funds are authorized at pledge and moved into a licensed third-party escrow when the pool locks.</p>
+                <p>
+                  Funds are authorized at pledge and moved into a licensed third-party
+                  escrow when the pool locks.
+                </p>
               </div>
               <div className="flex items-start gap-3">
                 <Info className="mt-0.5 w-4 h-4" style={{ color: COLORS.navy }} />
@@ -734,11 +1000,11 @@ export default function App() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border" style={{ borderColor: "#E5E7EB" }}>
+          <Card>
             <CardHeader>
               <CardTitle style={{ color: COLORS.navy }}>Fees & Timeline</CardTitle>
             </CardHeader>
-            <CardContent className="text-sm space-y-2" style={{ color: "#4B5563" }}>
+            <CardContent className="text-sm space-y-2 text-gray-700">
               <ul className="list-disc pl-5 space-y-1">
                 <li>Platform fee: {Math.round(PLATFORM_FEE_RATE * 100)}% on successful pools (0% if MOQ not met).</li>
                 <li>Payments via card/ACH/wire; funds captured on lock and held in escrow until delivery.</li>
@@ -751,30 +1017,59 @@ export default function App() {
 
         {/* FAQ */}
         <section id="faq" className="space-y-4">
-          <h2 className="text-2xl font-bold" style={{ color: COLORS.navy }}>FAQ</h2>
+          <h2 className="text-2xl font-bold" style={{ color: COLORS.navy }}>
+            FAQ
+          </h2>
           <div className="grid md:grid-cols-2 gap-4">
             {[
-              { q: "What happens if the pool misses MOQ?", a: "Your authorization is released / refunded immediately. You can auto-join the next batch." },
-              { q: "Can I add my brand label?", a: "Yes, on eligible pools. Choose add-ons like neck print or hangtags in the Join flow." },
-              { q: "What if a payment fails after lock?", a: "You have 48 hours to update payment. If unresolved, your pledge is removed." },
-              { q: "Do you support private pools?", a: "Yes—invite-only pools for associations, groups, and brands." },
+              {
+                q: "What happens if the pool misses MOQ?",
+                a:
+                  "Your authorization is released / refunded immediately. You can auto-join the next batch.",
+              },
+              {
+                q: "Can I add my brand label?",
+                a:
+                  "Yes, on eligible pools. Choose add-ons like neck print or hangtags in the Join flow.",
+              },
+              {
+                q: "What if a payment fails after lock?",
+                a:
+                  "You have 48 hours to update payment. If unresolved, your pledge is removed.",
+              },
+              {
+                q: "Do you support private pools?",
+                a: "Yes—invite-only pools for associations, groups, and brands.",
+              },
             ].map((f, i) => (
-              <Card key={i} className="border" style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF" }}>
-                <CardHeader><CardTitle className="text-base" style={{ color: COLORS.charcoal }}>{f.q}</CardTitle></CardHeader>
-                <CardContent className="text-sm" style={{ color: "#4B5563" }}>{f.a}</CardContent>
+              <Card key={i} style={{ backgroundColor: "#FFFFFF" }}>
+                <CardHeader>
+                  <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>
+                    {f.q}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-700">{f.a}</CardContent>
               </Card>
             ))}
           </div>
         </section>
       </main>
 
-      <footer className="border-t mt-12" style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF" }}>
+      <footer className="border-t mt-12 bg-white">
         <div className="max-w-6xl mx-auto px-4 py-10 text-sm flex flex-col md:flex-row gap-3 md:items-center">
-          <div style={{ color: COLORS.charcoal }}>© {new Date().getFullYear()} GroupMOQ — Factory pricing, without factory MOQs.</div>
+          <div style={{ color: COLORS.charcoal }}>
+            © {new Date().getFullYear()} GroupMOQ — Factory pricing, without factory MOQs.
+          </div>
           <div className="md:ml-auto flex items-center gap-4">
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">Terms</a>
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">Privacy</a>
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">Refunds</a>
+            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
+              Terms
+            </a>
+            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
+              Privacy
+            </a>
+            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
+              Refunds
+            </a>
           </div>
         </div>
       </footer>
@@ -784,7 +1079,11 @@ export default function App() {
         <CreatePool onCreate={handleCreate} />
       </Modal>
 
-      <Modal open={!!joining} onClose={() => setJoining(null)} title={joining ? `Join: ${joining.title}` : "Join Pool"}>
+      <Modal
+        open={!!joining}
+        onClose={() => setJoining(null)}
+        title={joining ? `Join: ${joining.title}` : "Join Pool"}
+      >
         {joining && <JoinPoolForm pool={joining} onSubmit={handleJoinSubmit} />}
       </Modal>
     </div>
