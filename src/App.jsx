@@ -662,7 +662,7 @@ export default function App() {
             title: "Post or join a pool",
             text: "Describe the item, target MOQ, unit price, and deadline. Or join an existing pool in your niche.",
           },{
-            icon: HandCoins,
+            icon: DollarSign,
             title: "Pledge safely",
             text: "Funds are authorized at pledge. When MOQ is hit, authorizations capture and funds move to Escrow.com.",
           },{
