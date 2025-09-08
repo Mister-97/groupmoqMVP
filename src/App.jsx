@@ -459,7 +459,7 @@ function JoinPoolForm({ pool, onSubmit }) {
       <div className="flex items-center gap-3">
         <Switch id="accept" checked={accept} onCheckedChange={setAccept} />
         <Label htmlFor="accept" className="text-sm">
-          I agree to the{" "}
+          I agree to the {" "}
           <span className="underline cursor-pointer" style={{ color: COLORS.navy }}>
             Pool Terms
           </span>
@@ -803,7 +803,7 @@ export default function App() {
 
   const flash = (msg, ms = 4200) => {
     setBanner(msg);
-    window.clearTimeout((flash._t || 0));
+    window.clearTimeout(flash._t || 0);
     flash._t = window.setTimeout(() => setBanner(""), ms);
   };
 
