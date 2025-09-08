@@ -26,7 +26,7 @@ const COLORS = {
 const CUSTOM_OPTIONS = [
   { id: "neck_label", name: "Private label neck print", perUnit: 0.35, setupFee: 80 },
   { id: "hangtag", name: "Hangtag set (tag+string+barcode)", perUnit: 1.2, setupFee: 60 },
-];
+]test;
 
 // In JS we don’t declare types — just use strings directly
 
