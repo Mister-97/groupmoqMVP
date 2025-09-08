@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, HandCoins, ShieldCheck, Users, Factory, Timer, Plus, Search, BarChart3, X, Info, Lock, ClipboardCheck, Ship, Tag as TagIcon, FileText } from "lucide-react";
+import { CheckCircle2, DollarSign, ShieldCheck, Users, Factory, Timer, Plus, Search, BarChart3, X, Info, Lock, ClipboardCheck, Ship, Tag as TagIcon, FileText } from "lucide-react";
 
 // Simple UI Components (replacing the missing @/components/ui imports)
 const Button = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }) => {
@@ -494,7 +494,7 @@ function PoolCard({ pool, onJoin, onLock }) {
         <div className="text-sm" style={{ color: "#4B5563" }}>{pool.specs}</div>
         <div className="grid grid-cols-3 gap-3">
           <Stat icon={Users} label="Joined" value={`${pool.joinedUnits} / ${pool.moqUnits}`} />
-          <Stat icon={HandCoins} label="Unit Price" value={currency(pool.unitPrice)} />
+          <Stat icon={DollarSign} label="Unit Price" value={currency(pool.unitPrice)} />
           <Stat icon={Timer} label="Time left" value={<Countdown deadline={pool.deadline} />} />
         </div>
 
