@@ -30,7 +30,7 @@ const CUSTOM_OPTIONS = [
 
 type CustomOptionId = typeof CUSTOM_OPTIONS[number]["id"];
 
-const CATEGORIES = ["Textiles", "Hair & Beauty", "Footwear", "Electronics", "Food & Beverage", "Packaging"] as const;
+const CATEGORIES = ["Textiles", "Hair & Beauty", "Footwear", "Electronics", "Food & Beverage", "Packaging"];
 const PLATFORM_FEE_RATE = 0.03;
 const DEFAULT_QC_HOLDBACK_RATE = 0.10;
 const USA_ONLY = true;
