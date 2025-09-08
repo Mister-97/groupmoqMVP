@@ -35,7 +35,7 @@ const PLATFORM_FEE_RATE = 0.03;
 const DEFAULT_QC_HOLDBACK_RATE = 0.10;
 const USA_ONLY = true;
 
-function currency(n) number) {
+function currency(n) {
   return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 }
 
