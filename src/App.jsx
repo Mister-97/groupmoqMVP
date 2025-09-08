@@ -26,9 +26,9 @@ const COLORS = {
 const CUSTOM_OPTIONS = [
   { id: "neck_label", name: "Private label neck print", perUnit: 0.35, setupFee: 80 },
   { id: "hangtag", name: "Hangtag set (tag+string+barcode)", perUnit: 1.2, setupFee: 60 },
-] as const;
+];
 
-type CustomOptionId = typeof CUSTOM_OPTIONS[number]["id"];
+// In JS we don’t declare types — just use strings directly
 
 const CATEGORIES = ["Textiles", "Hair & Beauty", "Footwear", "Electronics", "Food & Beverage", "Packaging"];
 const PLATFORM_FEE_RATE = 0.03;
