@@ -12,7 +12,8 @@ import {
   BarChart3,
   X,
   Info,
-  Tag as TagIcon,
+  Tag,
+  Clock,
 } from "lucide-react";
 
 /* ------------------------ Minimal UI Primitives ------------------------ */
@@ -28,15 +29,20 @@ const Button = ({
   ...props
 }) => {
   const base =
-    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+    "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
   const variants = {
     default: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
     outline:
       "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500",
     ghost:
       "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-blue-500",
+    primary: "bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500",
   };
-  const sizes = { default: "px-4 py-2", lg: "px-6 py-3 text-base" };
+  const sizes = { 
+    default: "px-4 py-2", 
+    lg: "px-6 py-3 text-base",
+    sm: "px-3 py-1.5 text-sm"
+  };
 
   return (
     <button
@@ -53,7 +59,7 @@ const Button = ({
 
 const Card = ({ children, className = "", style }) => (
   <div
-    className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${className}`}
+    className={`bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow ${className}`}
     style={style}
   >
     {children}
@@ -94,12 +100,13 @@ const Textarea = ({ className = "", rows = 3, ...props }) => (
 
 const Badge = ({ children, variant = "default", className = "", style }) => {
   const variants = {
-    default: "bg-blue-100 text-blue-800",
-    secondary: "bg-gray-100 text-gray-800",
+    default: "bg-blue-50 text-blue-700 border border-blue-200",
+    secondary: "bg-gray-50 text-gray-700 border border-gray-200",
+    success: "bg-green-50 text-green-700 border border-green-200",
   };
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}
+      className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${variants[variant]} ${className}`}
       style={style}
     >
       {children}
@@ -135,7 +142,7 @@ const Switch = ({ id, checked, onCheckedChange }) => (
 );
 
 const Progress = ({ value, className = "" }) => (
-  <div className={`w-full bg-gray-200 rounded-full h-2 ${className}`}>
+  <div className={`w-full bg-gray-100 rounded-full h-2 ${className}`}>
     <div
       className="h-2 rounded-full transition-all duration-300 bg-green-500"
       style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
@@ -254,24 +261,10 @@ const seedPools = [
 
 /* ------------------------------ Small Bits ----------------------------- */
 
-const Stat = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-3">
-    <div className="rounded-2xl p-2" style={{ backgroundColor: COLORS.grayBg }}>
-      <Icon className="w-5 h-5" style={{ color: COLORS.navy }} />
-    </div>
-    <div>
-      <div className="text-sm text-gray-500">{label}</div>
-      <div className="font-semibold" style={{ color: COLORS.charcoal }}>
-        {value}
-      </div>
-    </div>
-  </div>
-);
-
 const Pill = ({ children, active, onClick }) => (
   <button
     onClick={onClick}
-    className="px-2.5 py-1 rounded-full border text-xs transition-colors"
+    className="px-3 py-1.5 rounded-full border text-sm font-medium transition-colors"
     style={{
       backgroundColor: active ? COLORS.navy : "transparent",
       color: active ? "#ffffff" : "#4B5563",
@@ -291,12 +284,11 @@ function Countdown({ deadline }) {
   const left = Math.max(0, deadline - now);
   const days = Math.floor(left / (1000 * 60 * 60 * 24));
   const hours = Math.floor((left / (1000 * 60 * 60)) % 24);
-  const mins = Math.floor((left / (1000 * 60)) % 60);
-  return (
-    <span>
-      {days}d {hours}h {mins}m
-    </span>
-  );
+  
+  if (days > 0) {
+    return <span>{days}d {hours}h</span>;
+  }
+  return <span>{hours}h</span>;
 }
 
 function Modal({ open, onClose, title, children }) {
@@ -358,8 +350,8 @@ function JoinPoolForm({ pool, onSubmit }) {
   const willOverflow = overflow > 0;
 
   return (
-    <div className="space-y-4">
-      <div className="grid md:grid-cols-2 gap-4">
+    <div className="space-y-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <div>
           <Label>Units to pledge (min {pool.minPledgeUnits})</Label>
           <Input
@@ -417,7 +409,7 @@ function JoinPoolForm({ pool, onSubmit }) {
           style={{ backgroundColor: COLORS.grayBg, borderColor: "#E5E7EB" }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <TagIcon className="w-4 h-4" style={{ color: COLORS.navy }} />
+            <Tag className="w-4 h-4" style={{ color: COLORS.navy }} />
             <span className="font-medium" style={{ color: COLORS.charcoal }}>
               Optional private label add-ons
             </span>
@@ -469,7 +461,7 @@ function JoinPoolForm({ pool, onSubmit }) {
       <div className="flex items-center justify-end gap-3 pt-2">
         <Button variant="ghost">Cancel</Button>
         <Button
-          style={{ backgroundColor: COLORS.amber, color: "#fff" }}
+          variant="primary"
           disabled={!accept || units < pool.minPledgeUnits}
           onClick={() =>
             onSubmit({
@@ -615,7 +607,7 @@ function CreatePool({ onCreate }) {
         </div>
         <div className="flex items-center justify-end">
           <Button
-            style={{ backgroundColor: COLORS.amber, color: "#fff" }}
+            variant="primary"
             onClick={submit}
           >
             <Plus className="w-4 h-4 mr-1" /> Publish Pool
@@ -626,7 +618,7 @@ function CreatePool({ onCreate }) {
   );
 }
 
-/* ------------------------------ Pool Card ------------------------------ */
+/* ------------------------------ SIMPLIFIED Pool Card ------------------------------ */
 
 function PoolCard({ pool, onJoin, onLock }) {
   const pct =
@@ -636,84 +628,75 @@ function PoolCard({ pool, onJoin, onLock }) {
   const remaining = Math.max(0, pool.moqUnits - pool.joinedUnits);
 
   return (
-    <Card className="hover:shadow-xl transition-shadow">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>
-              {pool.title}
-            </CardTitle>
-            <div className="mt-1 text-sm text-gray-500">
-              by {pool.supplier} •{" "}
-              <span className="font-medium" style={{ color: COLORS.navy }}>
-                {pool.category}
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-2 flex-wrap justify-end">
-            <span
-              className="text-xs px-2 py-1 rounded-full border"
-              style={{
-                backgroundColor: COLORS.grayBg,
-                color: COLORS.charcoal,
-                borderColor: "#E5E7EB",
-              }}
-            >
-              {pool.state ?? "OPEN"}
-            </span>
-            {pool.allowsCustomization && (
-              <Badge variant="secondary" style={{ color: COLORS.navy }}>
-                Private label
-              </Badge>
-            )}
-            {pool.badges?.slice(0, 2).map((b, i) => (
-              <Badge key={i} variant="secondary" style={{ color: COLORS.navy }}>
-                {b}
-              </Badge>
-            ))}
-          </div>
+    <Card className="p-6 space-y-4">
+      {/* Header - Product name and trust indicator */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-gray-900 leading-tight mb-1">
+            {pool.title}
+          </h3>
+          <p className="text-gray-600">
+            by {pool.supplier} • {pool.category}
+          </p>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="text-sm text-gray-700">{pool.specs}</div>
-        <div className="grid grid-cols-3 gap-3">
-          <Stat icon={Users} label="Joined" value={`${pool.joinedUnits} / ${pool.moqUnits}`} />
-          <Stat icon={DollarSign} label="Unit Price" value={currency(pool.unitPrice)} />
-          <Stat icon={Timer} label="Time left" value={<Countdown deadline={pool.deadline} />} />
+        <Badge variant="success" className="shrink-0">
+          <ShieldCheck className="w-3 h-3 mr-1" />
+          Verified
+        </Badge>
+      </div>
+
+      {/* Key metrics - Price, Progress, Time */}
+      <div className="grid grid-cols-3 gap-4 py-3">
+        <div className="text-center">
+          <div className="text-2xl font-bold text-gray-900">{currency(pool.unitPrice)}</div>
+          <div className="text-sm text-gray-500">per unit</div>
         </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-gray-900">{pool.joinedUnits}/{pool.moqUnits}</div>
+          <div className="text-sm text-gray-500">pledged</div>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-gray-900">
+            <Countdown deadline={pool.deadline} />
+          </div>
+          <div className="text-sm text-gray-500">remaining</div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="space-y-2">
         <Progress value={pct} />
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-gray-500">{remaining} units to MOQ</div>
+        <div className="flex justify-between text-sm text-gray-600">
+          <span>{remaining} units to MOQ</span>
+          <span>{pct}% funded</span>
         </div>
-        <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-gray-500">
-            Platform fee {Math.round(PLATFORM_FEE_RATE * 100)}%
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              style={{ borderColor: COLORS.navy, color: COLORS.navy }}
-              onClick={() => onJoin(pool)}
-            >
-              Join
-            </Button>
-            <Button
-              style={{ backgroundColor: COLORS.amber, color: "#fff" }}
-              onClick={() => onLock(pool.id)}
-              disabled={pool.joinedUnits < pool.moqUnits || pool.state !== "OPEN"}
-              title={
-                pool.state !== "OPEN"
-                  ? "Pool already locked"
-                  : pool.joinedUnits < pool.moqUnits
-                  ? "MOQ not reached yet"
-                  : "Lock this pool"
-              }
-            >
-              Lock Pool
-            </Button>
-          </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-3 pt-2">
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={() => onJoin(pool)}
+        >
+          Join Pool
+        </Button>
+        <Button
+          variant="primary"
+          className="flex-1"
+          onClick={() => onLock(pool.id)}
+          disabled={pool.joinedUnits < pool.moqUnits || pool.state !== "OPEN"}
+        >
+          {pool.state === "LOCKED" ? "Locked" : "Lock Pool"}
+        </Button>
+      </div>
+
+      {/* Optional specs - smaller, less prominent */}
+      {pool.specs && (
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs text-gray-500">{pool.specs}</p>
         </div>
-      </CardContent>
+      )}
     </Card>
   );
 }
@@ -836,7 +819,6 @@ export default function App() {
     );
     setJoining(null);
     flash(`Pledge authorized: ${units} units • Est: ${currency(total)}`);
-    // selected, notes, overflow, autoWaitlist would be persisted server-side in real app
   };
 
   const handleLock = (poolId) => {
@@ -878,7 +860,7 @@ export default function App() {
             >
               <Plus className="w-4 h-4 mr-1" /> Create pool
             </Button>
-            <Button style={{ backgroundColor: COLORS.amber, color: "#fff" }}>
+            <Button variant="primary">
               Sign in
             </Button>
           </div>
@@ -900,7 +882,7 @@ export default function App() {
         <Hero onCTAClick={() => setShowCreate(true)} />
 
         {/* How it works */}
-        <section id="how" className="grid md:grid-cols-3 gap-4">
+        <section id="how" className="grid md:grid-cols-3 gap-6">
           {[
             {
               icon: Users,
@@ -936,8 +918,8 @@ export default function App() {
         </section>
 
         {/* Search & Filters */}
-        <section className="space-y-4" id="pools">
-          <div className="flex flex-col md:flex-row md:items-center gap-3">
+        <section className="space-y-6" id="pools">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="relative md:w-1/2">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <Input
@@ -969,110 +951,13 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((p) => (
               <PoolCard key={p.id} pool={p} onJoin={setJoining} onLock={handleLock} />
             ))}
           </div>
         </section>
-
-        {/* Trust & Escrow */}
-        <section id="trust" className="grid lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ color: COLORS.navy }}>Trust & Escrow</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-gray-700">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 w-4 h-4" style={{ color: COLORS.navy }} />
-                <p>
-                  Funds are authorized at pledge and moved into a licensed third-party
-                  escrow when the pool locks.
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Info className="mt-0.5 w-4 h-4" style={{ color: COLORS.navy }} />
-                <p>Failed capture grace window: 48 hours to update payment after lock.</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Factory className="mt-0.5 w-4 h-4" style={{ color: COLORS.navy }} />
-                <p>Suppliers pass verification. QC holdback releases on delivery acceptance.</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ color: COLORS.navy }}>Fees & Timeline</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm space-y-2 text-gray-700">
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Platform fee: {Math.round(PLATFORM_FEE_RATE * 100)}% on successful pools (0% if MOQ not met).</li>
-                <li>Payments via card/ACH/wire; funds captured on lock and held in escrow until delivery.</li>
-                <li>QC: AQL recommended; photos & reports posted to the pool page.</li>
-                <li>USA-only buyers (MVP). Regional expansion will add later.</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* FAQ */}
-        <section id="faq" className="space-y-4">
-          <h2 className="text-2xl font-bold" style={{ color: COLORS.navy }}>
-            FAQ
-          </h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              {
-                q: "What happens if the pool misses MOQ?",
-                a:
-                  "Your authorization is released / refunded immediately. You can auto-join the next batch.",
-              },
-              {
-                q: "Can I add my brand label?",
-                a:
-                  "Yes, on eligible pools. Choose add-ons like neck print or hangtags in the Join flow.",
-              },
-              {
-                q: "What if a payment fails after lock?",
-                a:
-                  "You have 48 hours to update payment. If unresolved, your pledge is removed.",
-              },
-              {
-                q: "Do you support private pools?",
-                a: "Yes—invite-only pools for associations, groups, and brands.",
-              },
-            ].map((f, i) => (
-              <Card key={i} style={{ backgroundColor: "#FFFFFF" }}>
-                <CardHeader>
-                  <CardTitle className="text-base" style={{ color: COLORS.charcoal }}>
-                    {f.q}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-gray-700">{f.a}</CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
       </main>
-
-      <footer className="border-t mt-12 bg-white">
-        <div className="max-w-6xl mx-auto px-4 py-10 text-sm flex flex-col md:flex-row gap-3 md:items-center">
-          <div style={{ color: COLORS.charcoal }}>
-            © {new Date().getFullYear()} GroupMOQ — Factory pricing, without factory MOQs.
-          </div>
-          <div className="md:ml-auto flex items-center gap-4">
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
-              Terms
-            </a>
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
-              Privacy
-            </a>
-            <a className="hover:underline" style={{ color: COLORS.navy }} href="#">
-              Refunds
-            </a>
-          </div>
-        </div>
-      </footer>
 
       {/* Modals */}
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Start a Pool">
