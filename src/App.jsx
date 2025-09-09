@@ -45,7 +45,7 @@ const ProgressBar = ({ current = 63, target = 100 }) => {
         <div className="h-full bg-gold-500" style={{ width: `${pct}%` }} />
       </div>
       <p className="mt-2 text-xs text-navy-700">
-        More buyers, lower prices. If MOQ isn’t met, everyone gets a full refund.
+        More buyers, lower prices. If MOQ isn't met, everyone gets a full refund.
       </p>
     </div>
   );
@@ -242,7 +242,7 @@ export default function Hero() {
                 <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full" style={{ width: "63%", backgroundColor: colors.gold }} />
                 </div>
-                <p className="mt-2 text-xs text-slate-600">More buyers, lower prices. If MOQ isn’t met, everyone gets a full refund.</p>
+                <p className="mt-2 text-xs text-slate-600">More buyers, lower prices. If MOQ isn't met, everyone gets a full refund.</p>
               </div>
 
               <div className="mt-5 grid sm:grid-cols-2 gap-3">
@@ -301,55 +301,81 @@ const Step = ({ icon: Icon, title, text, bullets = [] }) => (
 export function HowItWorks() {
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
-      {/* Single wrapper to avoid mismatched closes */}
-      <div className="relative overflow-hidden rounded-3xl mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <img src={metalsHeader} alt="How it works background" className="absolute inset-0 -z-10 h-full w-full object-cover" aria-hidden />
-        <div className="absolute inset-0 -z-10 bg-[rgba(27,42,65,0.72)]" />
-
-        <div className="relative mx-auto max-w-5xl text-center">
-          <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
-            How it works
-          </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Pooling power, made simple</h2>
-          <p className="mt-3 text-white/90">
-            Buyers team up to hit a factory’s minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
-          </p>
-
-          {/* value chips */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Check className="h-4 w-4" /> Verified suppliers</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><ShieldCheck className="h-4 w-4" /> Escrow protected</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Truck className="h-4 w-4" /> Pooled freight</span>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Banner with background + steps inside */}
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <img src={metalsHeader} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
+            <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
           </div>
+          <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
+            <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
+              How it works
+            </span>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Pooling power, made simple</h2>
+            <p className="mt-3 text-white/90">
+              Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
+            </p>
 
-          {/* Steps inside banner */}
-          <div className="mt-8 grid md:grid-cols-3 gap-6 text-left">
-            {[
-              { n: 1, Icon: Users, title: 'Join or start a pool', text: 'Pick a category and join an open pool, or create your own with a target quantity and deadline.' },
-              { n: 2, Icon: DollarSign, title: 'Commit with escrow', text: 'Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.' },
-              { n: 3, Icon: Factory, title: 'Produce • Inspect • Ship', text: 'MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates.' },
-            ].map(({ n, Icon, title, text }, idx, arr) => (
-              <div key={n} className="relative group">
-                <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md p-6 text-white shadow-[0_6px_30px_rgba(0,0,0,0.25)]">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full border border-white/30 bg-white/10 grid place-items-center">
-                      <Icon className="h-5 w-5 text-white" />
+            {/* value chips */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Check className="h-4 w-4" /> Verified suppliers</span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><ShieldCheck className="h-4 w-4" /> Escrow protected</span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Truck className="h-4 w-4" /> Pooled freight</span>
+            </div>
+
+            {/* Steps inside banner */}
+            <div className="mt-8">
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  { n: 1, Icon: Users, title: 'Join or start a pool', text: 'Pick a category and join an open pool, or create your own with a target quantity and deadline.' },
+                  { n: 2, Icon: DollarSign, title: 'Commit with escrow', text: 'Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.' },
+                  { n: 3, Icon: Factory, title: 'Produce • Inspect • Ship', text: 'MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates.' },
+                ].map(({ n, Icon, title, text }, idx, arr) => (
+                  <div key={n} className="relative group">
+                    <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md p-6 text-left text-white shadow-[0_6px_30px_rgba(0,0,0,0.25)]">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full border border-white/30 bg-white/10 grid place-items-center">
+                          <Icon className="h-5 w-5 text-white" />
+                        </div>
+                        <h3 className="text-lg font-semibold">{title}</h3>
+                      </div>
+                      <p className="mt-3 text-white/90 text-sm leading-relaxed">{text}</p>
                     </div>
-                    <h3 className="text-lg font-semibold">{title}</h3>
+
+                    {/* Number badge */}
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 grid place-items-center text-sm font-semibold text-white">
+                      {n}
+                    </div>
+
+                    {/* Arrow connector (desktop) */}
+                    {idx < arr.length - 1 && (
+                      <>
+                        <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-white/40" />
+                        <div className="hidden md:block absolute top-1/2 -right-8 translate-x-full -translate-y-1/2 w-0 h-0 border-y-[10px] border-y-transparent border-l-[10px] border-l-white/60" />
+                      </>
+                    )}
+
+                    {/* Arrow connector (mobile, vertical) */}
+                    {idx < arr.length - 1 && (
+                      <div className="md:hidden absolute -bottom-7 left-1/2 -translate-x-1/2">
+                        <div className="mx-auto w-[2px] h-5 bg-white/40" />
+                        <div className="mx-auto w-0 h-0 border-x-[8px] border-x-transparent border-t-[8px] border-t-white/60" />
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-3 text-white/90 text-sm leading-relaxed">{text}</p>
-                </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-                {/* Number badge */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 grid place-items-center text-sm font-semibold text-white">
-                  {n}
-                </div>
-
-                {/* Arrow connector (desktop) */}
-                {idx < arr.length - 1 && (
-                  <>
-                    <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-white/40" />
-                    <div className="hidden md:block absolute top-1/2 -right-8 translate-x-full -translate-y-1/2 w-0 h-0 border-y-[10px] border-y-transpar (frosted cards on tinted image)
+// ---------------------------
+// SupplierBand Section (frosted cards on tinted image)
 // ---------------------------
 export function SupplierBand() {
   const [commodity, setCommodity] = React.useState("");
@@ -359,7 +385,7 @@ export function SupplierBand() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ commodity, email, note });
-    alert("Thanks! We’ll review your suggestion and reach out.");
+    alert("Thanks! We'll review your suggestion and reach out.");
     setCommodity("");
     setEmail("");
     setNote("");
@@ -380,7 +406,7 @@ export function SupplierBand() {
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
             <p className="text-white/80">Partner with us</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight">Are you a supplier?</h3>
-            <p className="mt-3 text-white/90 text-sm sm:text-base">List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.</p>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">List a product, set your MOQ, and tap into pooled demand. We'll verify documents before you go live.</p>
             <ul className="mt-4 space-y-2 text-white/90 text-sm">
               <li className="flex items-center gap-2"><CheckCircle2 className="h-5 w-5 text-white" /> Verified by GroupMOQ</li>
               <li className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-white" /> Escrow‑protected payouts</li>
@@ -444,14 +470,10 @@ export function SupplierBand() {
             </form>
           </div>
         </div>
-
-        </div>
       </div>
     </section>
   );
 }
-
-
 
 // ---------------------------
 // Footer
@@ -694,7 +716,7 @@ export function AfterSupplierInfo(){
             <h3 className="text-lg font-semibold text-slate-900">Why GroupMOQ</h3>
             <ul className="mt-3 space-y-2 text-sm text-slate-700">
               <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Factory pricing unlocked at MOQ</li>
-              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Escrow + refund guarantee if MOQ isn’t met</li>
+              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Escrow + refund guarantee if MOQ isn't met</li>
               <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Pooled freight lowers landed cost</li>
               <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Verified suppliers & optional inspection</li>
             </ul>
@@ -728,7 +750,7 @@ export function AfterSupplierInfo(){
         <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <ShieldCheck className="h-6 w-6 flex-shrink-0" style={{ color: colors.navy }} />
-            <p className="text-slate-800"><span className="font-semibold">Full refund if MOQ isn’t met.</span> Your commitment is held in escrow with Stripe Connect until the pool closes.</p>
+            <p className="text-slate-800"><span className="font-semibold">Full refund if MOQ isn't met.</span> Your commitment is held in escrow with Stripe Connect until the pool closes.</p>
           </div>
           <div className="flex gap-3">
             <a href="#pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
