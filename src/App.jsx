@@ -8,7 +8,7 @@ import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import howWorksBg from "./assets/factoryhowitworkssection.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory, Lightbulb, Send } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory, Lightbulb, Send, Mail, Phone, MapPin, ArrowUpRight, Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
@@ -268,6 +268,7 @@ export default function Hero() {
 
       <HowItWorks />
       <SupplierBand />
+      <SiteFooter />
     </>
   );
 }
@@ -517,5 +518,118 @@ export function SupplierBand() {
         </div>
       </div>
     </section>
+  );
+}
+
+
+
+// ---------------------------
+// Footer
+// ---------------------------
+export function SiteFooter() {
+  const [email, setEmail] = React.useState("");
+  const onSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    console.log({ email });
+    alert("Thanks! We'll keep you in the loop.");
+    setEmail("");
+  };
+
+  return (
+    <footer className="relative mt-16">
+      {/* gold top accent */}
+      <div className="h-1 w-full" style={{ backgroundColor: colors.gold }} />
+
+      <div className="relative bg-[#0F1826] text-white">
+        {/* trust bar */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap gap-3 text-sm">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><ShieldCheck className="h-4 w-4" /> Escrow protected</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><CheckCircle2 className="h-4 w-4" /> Verified suppliers</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><Truck className="h-4 w-4" /> Pooled freight</span>
+          </div>
+        </div>
+
+        {/* main footer */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
+          <div className="grid gap-10 lg:grid-cols-5">
+            {/* brand + newsletter */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg grid place-items-center font-black" style={{ backgroundColor: colors.gold, color: colors.navy }}>G</div>
+                <span className="text-lg font-semibold">GroupMOQ</span>
+              </div>
+              <p className="mt-3 text-white/80 text-sm max-w-md">Group buying for real-world goods. Team up to hit factory MOQs and unlock wholesale pricing—safely.</p>
+
+              <form onSubmit={onSubscribe} className="mt-5 flex items-center gap-2 max-w-md">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+                />
+                <button type="submit" className="rounded-lg px-4 py-3 font-medium text-navy-900 hover:opacity-90" style={{ backgroundColor: colors.gold }}>
+                  Subscribe
+                </button>
+              </form>
+
+              {/* contact */}
+              <div className="mt-4 flex flex-wrap gap-4 text-sm text-white/80">
+                <a href="mailto:hello@groupmoq.com" className="inline-flex items-center gap-2 hover:text-white"><Mail className="h-4 w-4" /> hello@groupmoq.com</a>
+                <span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> +1 (555) 010-1234</span>
+              </div>
+
+              {/* social */}
+              <div className="mt-4 flex items-center gap-3">
+                <a href="#" aria-label="Twitter" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Twitter className="h-4 w-4" /></a>
+                <a href="#" aria-label="LinkedIn" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Linkedin className="h-4 w-4" /></a>
+                <a href="#" aria-label="Instagram" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Instagram className="h-4 w-4" /></a>
+                <a href="#" aria-label="Facebook" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Facebook className="h-4 w-4" /></a>
+              </div>
+            </div>
+
+            {/* links */}
+            <div className="grid gap-10 sm:grid-cols-3 lg:col-span-3">
+              <div>
+                <h4 className="text-sm font-semibold text-white/90">Product</h4>
+                <ul className="mt-3 space-y-2 text-white/80 text-sm">
+                  <li><a href="#how" className="hover:text-white inline-flex items-center gap-1">How it works <ArrowUpRight className="h-3 w-3" /></a></li>
+                  <li><a href="#pools" className="hover:text-white">Open pools</a></li>
+                  <li><a href="#create" className="hover:text-white">Start a new pool</a></li>
+                  <li><a href="#sugar" className="hover:text-white">Categories</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-white/90">Company</h4>
+                <ul className="mt-3 space-y-2 text-white/80 text-sm">
+                  <li><a href="#suppliers" className="hover:text-white">For suppliers</a></li>
+                  <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+                  <li><a href="#contact" className="hover:text-white">Contact</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-white/90">Legal</h4>
+                <ul className="mt-3 space-y-2 text-white/80 text-sm">
+                  <li><a href="#terms" className="hover:text-white">Terms</a></li>
+                  <li><a href="#privacy" className="hover:text-white">Privacy</a></li>
+                  <li><a href="#compliance" className="hover:text-white">Compliance</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* bottom bar */}
+        <div className="border-t border-white/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-xs text-white/70 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© {new Date().getFullYear()} GroupMOQ. All rights reserved.</p>
+            <p className="text-white/60">Built for buyers. Backed by escrow.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }
