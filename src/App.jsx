@@ -1,4 +1,6 @@
 import React from "react";
+// Place this file at: src/assets/refinedsugar.png
+import refinedSugar from "./assets/refinedsugar.png";
 import { motion } from "framer-motion";
 import { Users, ShieldCheck, Truck, DollarSign, CheckCircle2 } from "lucide-react";
 
@@ -182,7 +184,7 @@ export default function Hero() {
             </div>
             <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100">
               <img
-                src="/images/refinedsugar.png"
+                src={refinedSugar}
                 alt="Refined sugar crystals"
                 className="h-full w-full object-cover"
                 loading="eager"
