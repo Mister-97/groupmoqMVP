@@ -266,6 +266,7 @@ export default function Hero() {
       </section>
 
       <HowItWorks />
+      <SupplierBand />
     </>
   );
 }
@@ -405,15 +406,59 @@ export function HowItWorks() {
           </div>
         </div>
 
-        {/* Supplier callout (kept) */}
-        <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-lg font-semibold text-slate-900">Are you a supplier?</h3>
-            <p className="text-sm text-slate-700">List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.</p>
+        {/* (Supplier callout moved into dedicated SupplierBand section) */}
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------
+// SupplierBand Section (frosted cards on tinted image)
+// ---------------------------
+export function SupplierBand() {
+  return (
+    <section id="suppliers" className="relative overflow-hidden">
+      {/* Background image with warm tint */}
+      <div className="absolute inset-0 -z-10">
+        <img src={metalsHeader} alt="Factory background" className="h-full w-full object-cover" aria-hidden />
+        <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Card: Supplier invite */}
+          <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+            <p className="text-white/80">Partner with us</p>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight">Are you a supplier?</h3>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.</p>
+            <ul className="mt-4 space-y-2 text-white/90 text-sm">
+              <li className="flex items-center gap-2"><CheckCircle2 className="h-5 w-5 text-white" /> Verified by GroupMOQ</li>
+              <li className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-white" /> Escrow‑protected payouts</li>
+              <li className="flex items-center gap-2"><Truck className="h-5 w-5 text-white" /> Access pooled freight</li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#apply" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
+                Apply to list <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+              <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
+                Learn more
+              </a>
+            </div>
           </div>
-          <a href="#suppliers" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
-            Apply to list
-          </a>
+
+          {/* Card: Assurance / trust */}
+          <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+            <p className="text-white/80">Protection & quality</p>
+            <h3 className="mt-2 text-3xl font-extrabold tracking-tight flex items-center gap-2">
+              <ShieldCheck className="h-8 w-8" /> Trade Assurance
+            </h3>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">Source confidently with escrow payments, dispute mediation, and optional third‑party inspection before shipment.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">Watch video</a>
+              <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">Learn more</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
