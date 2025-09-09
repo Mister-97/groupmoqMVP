@@ -128,7 +128,7 @@ export default function Hero() {
               <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group">
                 <div
                   className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
-                  style={{ ['--tw-ring-color']: colors.gold }}
+                  style={{ "--tw-ring-color": colors.gold }}
                 >
                   <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
                 </div>
