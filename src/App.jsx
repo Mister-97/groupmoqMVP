@@ -593,47 +593,28 @@ export function SiteFooter() {
 // ---------------------------
 export function MadeInUSASection() {
   const usaPools = [
-    {
-      id: 'us1',
-      title: 'Organic Cane Sugar (USA)',
-      subtitle: 'MOQ 5 MT • Gulf Coast lanes',
-      category: 'Sugar',
-      image: refinedSugar,
-      price: '$—/MT',
-      oldPrice: '$—/MT',
-      progress: 12,
-      target: 40,
-      badge: 'Made in USA',
-    },
-    {
-      id: 'us2',
-      title: 'Premium Cotton Fabric (USA)',
-      subtitle: 'MOQ 3,000 m • Southeast lanes',
-      category: 'Fabrics',
-      image: fabricsHeader,
-      price: '$—/m',
-      oldPrice: '$—/m',
-      progress: 26,
-      target: 60,
-      badge: 'Made in USA',
-    },
-    {
-      id: 'us3',
-      title: 'Corrugated Steel Panels (USA)',
-      subtitle: 'MOQ 20,000 ft² • Midwest lanes',
-      category: 'Metals',
-      image: metalsHeader,
-      price: '$—/ft²',
-      oldPrice: '$—/ft²',
-      progress: 18,
-      target: 50,
-      badge: 'Made in USA',
-    },
+    { id: 'us1', title: 'Organic Cane Sugar (USA)', subtitle: 'MOQ 5 MT • Gulf Coast lanes', category: 'Sugar', image: refinedSugar, price: '$—/MT', oldPrice: '$—/MT', progress: 12, target: 40, badge: 'Made in USA' },
+    { id: 'us2', title: 'Premium Cotton Fabric (USA)', subtitle: 'MOQ 3,000 m • Southeast lanes', category: 'Fabrics', image: fabricsHeader, price: '$—/m', oldPrice: '$—/m', progress: 26, target: 60, badge: 'Made in USA' },
+    { id: 'us3', title: 'Corrugated Steel Panels (USA)', subtitle: 'MOQ 20,000 ft² • Midwest lanes', category: 'Metals', image: metalsHeader, price: '$—/ft²', oldPrice: '$—/ft²', progress: 18, target: 50, badge: 'Made in USA' },
   ];
 
   return (
-    <section id="made-in-usa" className="relative scroll-mt-28 md:scroll-mt-32">
-      <div className="mx-auto max-w-7xl (search + info cards moved here + popular pools)
+    <section id=\"made-in-usa\" className=\"relative scroll-mt-28 md:scroll-mt-32\">
+      <div className=\"mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-14\">
+        <h2 className=\"text-2xl sm:text-3xl font-extrabold text-slate-900\">Made in USA</h2>
+        <p className=\"text-slate-700\">American-made pools curated for faster lead times and simpler logistics.</p>
+        <div className=\"mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3\">
+          {usaPools.map((p) => (
+            <PoolCard key={p.id} pool={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------
+// Pools Section (search + info cards moved here + popular pools)
 // ---------------------------
 export function PoolsSection() {
   const [q, setQ] = React.useState("");
@@ -716,33 +697,37 @@ export function PoolsSection() {
 }
 
 function PoolCard({ pool }){
+  const pct = Math.round((pool.progress / pool.target) * 100);
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
-        <img src={pool.image} alt={pool.title} className="h-full w-full object-cover" />
+    <div className=\"rounded-2xl border border-slate-200 bg-white p-4 shadow-sm\">
+      <div className=\"aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100 relative\">
+        <img src={pool.image} alt={pool.title} className=\"h-full w-full object-cover\" />
+        {pool.badge && (
+          <span className=\"absolute left-2 top-2 rounded-full bg-white/90 text-slate-900 text-xs font-medium px-2 py-0.5 border border-slate-200\">{pool.badge}</span>
+        )}
       </div>
-      <div className="mt-4 flex items-start justify-between gap-3">
+      <div className=\"mt-4 flex items-start justify-between gap-3\">
         <div>
-          <h4 className="font-semibold text-slate-900">{pool.title}</h4>
-          <p className="text-slate-600 text-sm">{pool.subtitle}</p>
+          <h4 className=\"font-semibold text-slate-900\">{pool.title}</h4>
+          <p className=\"text-slate-600 text-sm\">{pool.subtitle}</p>
         </div>
-        <div className="text-right">
-          <p className="text-lg font-extrabold text-slate-900">{pool.price}</p>
-          <p className="text-slate-500 text-xs line-through">{pool.oldPrice}</p>
+        <div className=\"text-right\">
+          <p className=\"text-lg font-extrabold text-slate-900\">{pool.price}</p>
+          <p className=\"text-slate-500 text-xs line-through\">{pool.oldPrice}</p>
         </div>
       </div>
-      <div className="mt-3">
-        <div className="flex justify-between text-xs text-slate-600 mb-1">
+      <div className=\"mt-3\">
+        <div className=\"flex justify-between text-xs text-slate-600 mb-1\">
           <span>Group progress</span>
           <span>{pool.progress}/{pool.target} joined</span>
         </div>
-        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full" style={{ width: `${Math.round((pool.progress/pool.target)*100)}%`, backgroundColor: colors.gold }} />
+        <div className=\"h-2 w-full bg-slate-200 rounded-full overflow-hidden\">
+          <div className=\"h-full\" style={{ width: String(pct) + '%', backgroundColor: colors.gold }} />
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <button className="rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>Join</button>
-        <button className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Details</button>
+      <div className=\"mt-4 grid grid-cols-2 gap-2\">
+        <button className=\"rounded-lg px-3 py-2 font-medium text-white hover:opacity-90\" style={{ backgroundColor: colors.navy }}>Join</button>
+        <button className=\"rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50\" style={{ borderColor: colors.navy }}>Details</button>
       </div>
     </div>
   );
