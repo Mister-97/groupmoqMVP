@@ -326,33 +326,62 @@ export function HowItWorks() {
 
         {/* Timeline steps */}
         <div className="relative mt-10">
-          <div className="absolute left-10 right-10 top-8 hidden md:block h-0.5 bg-slate-200" />
           <div className="grid md:grid-cols-3 gap-6">
-            {[{
-              n: 1,
-              Icon: Users,
-              title: 'Join or start a pool',
-              text: 'Pick a category and join an open pool, or create your own with a target quantity and deadline.'
-            },{
-              n: 2,
-              Icon: DollarSign,
-              title: 'Commit with escrow',
-              text: 'Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.'
-            },{
-              n: 3,
-              Icon: Factory,
-              title: 'Produce • Inspect • Ship',
-              text: 'MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates.'
-            }].map(({ n, Icon, title, text }) => (
-              <div key={n} className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="absolute -top-3 md:top-6 md:-translate-y-1/2 left-6 md:left-1/2 md:-translate-x-1/2 w-10 h-10 rounded-full bg-white border border-slate-300 grid place-items-center font-semibold text-slate-900">{n}</div>
-                <div className="mt-6 md:mt-10 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full border border-slate-200 bg-white grid place-items-center">
-                    <Icon className="h-5 w-5" style={{ color: colors.navy }} />
+            {[
+              {
+                n: 1,
+                Icon: Users,
+                title: "Join or start a pool",
+                text:
+                  "Pick a category and join an open pool, or create your own with a target quantity and deadline.",
+              },
+              {
+                n: 2,
+                Icon: DollarSign,
+                title: "Commit with escrow",
+                text:
+                  "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.",
+              },
+              {
+                n: 3,
+                Icon: Factory,
+                title: "Produce • Inspect • Ship",
+                text:
+                  "MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates.",
+              },
+            ].map(({ n, Icon, title, text }, idx, arr) => (
+              <div key={n} className="relative group">
+                {/* Card */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full border border-slate-200 bg-white grid place-items-center">
+                      <Icon className="h-5 w-5" style={{ color: colors.navy }} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+                  <p className="mt-3 text-slate-700 text-sm leading-relaxed">{text}</p>
                 </div>
-                <p className="mt-3 text-slate-700 text-sm leading-relaxed">{text}</p>
+
+                {/* Number badge */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white border border-slate-300 grid place-items-center text-sm font-semibold text-slate-900">
+                  {n}
+                </div>
+
+                {/* Arrow connector (desktop) */}
+                {idx < arr.length - 1 && (
+                  <>
+                    <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-slate-200" />
+                    <div className="hidden md:block absolute top-1/2 -right-8 translate-x-full -translate-y-1/2 w-0 h-0 border-y-[10px] border-y-transparent border-l-[10px] border-l-slate-300" />
+                  </>
+                )}
+
+                {/* Arrow connector (mobile, vertical) */}
+                {idx < arr.length - 1 && (
+                  <div className="md:hidden absolute -bottom-7 left-1/2 -translate-x-1/2">
+                    <div className="mx-auto w-[2px] h-5 bg-slate-200" />
+                    <div className="mx-auto w-0 h-0 border-x-[8px] border-x-transparent border-t-[8px] border-t-slate-300" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
