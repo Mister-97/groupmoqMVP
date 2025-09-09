@@ -7,7 +7,7 @@ import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, CheckCircle2, ClipboardCheck, Factory, Package, Clock, Percent, FileText } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Factory, Package, Clock, Percent } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
@@ -162,7 +162,7 @@ export default function Hero() {
 
           {/* Trust stats */}
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {[{ Icon: Users, label: "Buyers pooled", value: "2,340+" }, { Icon: DollarSign, label: "Avg. savings", value: "22%" }, { Icon: ShieldCheck, label: "Escrow backed", value: "Stripe Connect" }, { Icon: Truck, label: "Ship lanes", value: "US ↔ VN/TH/CN" }].map(({ Icon, label, value }) => (
+            {[{ Icon: Users, label: "Buyers pooled", value: "2,340+" }, { Icon: Percent, label: "Avg. savings", value: "22%" }, { Icon: ShieldCheck, label: "Escrow backed", value: "Stripe Connect" }, { Icon: Truck, label: "Ship lanes", value: "US ↔ VN/TH/CN" }].map(({ Icon, label, value }) => (
               <div key={label} className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full border border-slate-200 bg-white flex items-center justify-center">
                   <Icon className="h-5 w-5" style={{ color: colors.navy }} />
@@ -281,7 +281,7 @@ export function HowItWorks() {
             bullets={["Transparent MOQ & deadline", "See current progress in real time"]}
           />
           <Step
-            icon={HandCoins}
+            icon={DollarSign}
             title="Commit with escrow"
             text="Place your commitment. Funds are held via Stripe Connect in escrow until the pool closes."
             bullets={["Cancel anytime before close", "If MOQ isn’t met → automatic refund"]}
@@ -310,7 +310,7 @@ export function HowItWorks() {
             </ol>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><DollarSign className="h-5 w-5" style={{ color: colors.navy }} /> Fees at a glance</h3>
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><FileText$1/> Fees at a glance</h3>
             <ul className="mt-3 list-disc pl-6 text-sm text-slate-700 space-y-1">
               <li>Platform fee: 2–5% (built into price).</li>
               <li>Payment processing: pass‑through.</li>
