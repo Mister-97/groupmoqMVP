@@ -6,8 +6,9 @@ import coffeeHeader from "./assets/coffeebeansheader.png";
 import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
+import howWorksBg from "./assets/factoryhowitworkssection.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory, Lightbulb, Send } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
@@ -299,20 +300,26 @@ export function HowItWorks() {
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-block rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: colors.bgLight, color: colors.navy }}>
-            How it works
-          </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">Pooling power, made simple</h2>
-          <p className="mt-3 text-slate-700">
-            Buyers team up to hit a factory’s minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
-          </p>
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <img src={howWorksBg} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
+            <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
+          </div>
+          <div className="mx-auto max-w-3xl text-center py-10 sm:py-14">
+            <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
+              How it works
+            </span>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Pooling power, made simple</h2>
+            <p className="mt-3 text-white/90">
+              Buyers team up to hit a factory’s minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
+            </p>
 
-          {/* value chips */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><Check className="h-4 w-4" style={{ color: colors.navy }} /> Verified suppliers</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><ShieldCheck className="h-4 w-4" style={{ color: colors.navy }} /> Escrow protected</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><Truck className="h-4 w-4" style={{ color: colors.navy }} /> Pooled freight</span>
+            {/* value chips */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Check className="h-4 w-4" style={{ color: 'white' }} /> Verified suppliers</span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><ShieldCheck className="h-4 w-4" style={{ color: 'white' }} /> Escrow protected</span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90"><Truck className="h-4 w-4" style={{ color: 'white' }} /> Pooled freight</span>
+            </div>
           </div>
         </div>
 
@@ -416,6 +423,19 @@ export function HowItWorks() {
 // SupplierBand Section (frosted cards on tinted image)
 // ---------------------------
 export function SupplierBand() {
+  const [commodity, setCommodity] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [note, setNote] = React.useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({ commodity, email, note });
+    alert("Thanks! We’ll review your suggestion and reach out.");
+    setCommodity("");
+    setEmail("");
+    setNote("");
+  };
+
   return (
     <section id="suppliers" className="relative overflow-hidden">
       {/* Background image with warm tint */}
@@ -447,20 +467,56 @@ export function SupplierBand() {
             </div>
           </div>
 
-          {/* Card: Assurance / trust */}
+          {/* Card: Commodity interest capture */}
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
-            <p className="text-white/80">Protection & quality</p>
+            <p className="text-white/80">Tell us what you need</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight flex items-center gap-2">
-              <ShieldCheck className="h-8 w-8" /> Trade Assurance
+              <Lightbulb className="h-8 w-8" /> Interested in a certain commodity?
             </h3>
-            <p className="mt-3 text-white/90 text-sm sm:text-base">Source confidently with escrow payments, dispute mediation, and optional third‑party inspection before shipment.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">Watch video</a>
-              <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">Learn more</a>
-            </div>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">Send us your suggestions and we will work to source verified suppliers before going live.</p>
+
+            <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label htmlFor="commodity" className="sr-only">Commodity</label>
+              <input
+                id="commodity"
+                required
+                value={commodity}
+                onChange={(e) => setCommodity(e.target.value)}
+                placeholder="Commodity (e.g., ICUMSA-45 sugar)"
+                className="rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
+              />
+
+              <label htmlFor="email" className="sr-only">Email</label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email"
+                className="rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
+              />
+
+              <label htmlFor="note" className="sr-only">Notes</label>
+              <input
+                id="note"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Volume, lanes, timing (optional)"
+                className="sm:col-span-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
+              />
+
+              <div className="sm:col-span-2 flex flex-wrap gap-3 mt-1">
+                <button type="submit" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
+                  Send suggestion <Send className="ml-2 h-4 w-4" />
+                </button>
+                <a href="#pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">See open pools</a>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
