@@ -302,7 +302,7 @@ export function HowItWorks() {
         {/* Header */}
         <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            <img src={howWorksBg} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
+            <img src={metalsHeader} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
             <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
           </div>
           <div className="mx-auto max-w-3xl text-center py-10 sm:py-14">
@@ -440,7 +440,7 @@ export function SupplierBand() {
     <section id="suppliers" className="relative overflow-hidden">
       {/* Background image with warm tint */}
       <div className="absolute inset-0 -z-10">
-        <img src={metalsHeader} alt="Factory background" className="h-full w-full object-cover" aria-hidden />
+        <img src={howWorksBg} alt="Factory background" className="h-full w-full object-cover" aria-hidden />
         <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
       </div>
@@ -519,4 +519,3 @@ export function SupplierBand() {
     </section>
   );
 }
-
