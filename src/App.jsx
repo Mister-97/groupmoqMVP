@@ -8,7 +8,7 @@ import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import howWorksBg from "./assets/factoryhowitworkssection.png";
 import { motion } from "framer-motion";
-import { $1, Search } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory, Lightbulb, Send, Mail, Phone, MapPin, ArrowUpRight, Twitter, Facebook, Instagram, Linkedin, Search } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
