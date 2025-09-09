@@ -7,7 +7,7 @@ import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, DollarSign, CheckCircle2, ClipboardCheck, Factory, HandCoins, Package, Clock } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, ClipboardCheck, Factory, Package, Clock, Percent, FileText } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
