@@ -268,6 +268,7 @@ export default function Hero() {
 
       <HowItWorks />
       <PoolsSection />
+      <MadeInUSASection />
       <SupplierBand />
       <AfterSupplierInfo />
       <SiteFooter />
@@ -588,7 +589,51 @@ export function SiteFooter() {
 
 
 // ---------------------------
-// Pools Section (search + info cards moved here + popular pools)
+// Made in USA Section (three curated pools, no search)
+// ---------------------------
+export function MadeInUSASection() {
+  const usaPools = [
+    {
+      id: 'us1',
+      title: 'Organic Cane Sugar (USA)',
+      subtitle: 'MOQ 5 MT • Gulf Coast lanes',
+      category: 'Sugar',
+      image: refinedSugar,
+      price: '$—/MT',
+      oldPrice: '$—/MT',
+      progress: 12,
+      target: 40,
+      badge: 'Made in USA',
+    },
+    {
+      id: 'us2',
+      title: 'Premium Cotton Fabric (USA)',
+      subtitle: 'MOQ 3,000 m • Southeast lanes',
+      category: 'Fabrics',
+      image: fabricsHeader,
+      price: '$—/m',
+      oldPrice: '$—/m',
+      progress: 26,
+      target: 60,
+      badge: 'Made in USA',
+    },
+    {
+      id: 'us3',
+      title: 'Corrugated Steel Panels (USA)',
+      subtitle: 'MOQ 20,000 ft² • Midwest lanes',
+      category: 'Metals',
+      image: metalsHeader,
+      price: '$—/ft²',
+      oldPrice: '$—/ft²',
+      progress: 18,
+      target: 50,
+      badge: 'Made in USA',
+    },
+  ];
+
+  return (
+    <section id="made-in-usa" className="relative scroll-mt-28 md:scroll-mt-32">
+      <div className="mx-auto max-w-7xl (search + info cards moved here + popular pools)
 // ---------------------------
 export function PoolsSection() {
   const [q, setQ] = React.useState("");
