@@ -527,6 +527,44 @@ export function SupplierBand() {
             </form>
           </div>
         </div>
+
+        {/* Benefits & money flow under supplier cards */}
+        <div className="mt-10">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-2xl border border-white/20 bg-white/90 p-6 text-slate-900 shadow-sm">
+              <h3 className="text-lg font-semibold">Why GroupMOQ</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Factory pricing unlocked at MOQ</li>
+                <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Escrow + refund guarantee if MOQ isn’t met</li>
+                <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Pooled freight lowers landed cost</li>
+                <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Verified suppliers & optional inspection</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/90 p-6 text-slate-900 shadow-sm">
+              <h3 className="text-lg font-semibold">Buying Solo</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Small‑lot or retail pricing</li>
+                <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />You carry more risk up front</li>
+                <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Higher freight per unit</li>
+                <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Limited supplier leverage</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/90 p-6 text-slate-900 shadow-sm">
+              <h3 className="text-lg font-semibold flex items-center gap-2"><Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money</h3>
+              <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
+                <li>Commit → funds held in escrow (Stripe Connect).</li>
+                <li>Pool closes → MOQ met: capture & pay supplier; MOQ not met: instant refund.</li>
+                <li>Shipment arranged → pooled freight → delivery.</li>
+              </ol>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/90 p-6 text-slate-900 shadow-sm">
+              <h3 className="text-lg font-semibold flex items-center gap-2"><Percent className="h-5 w-5" style={{ color: colors.navy }} /> Typical savings</h3>
+              <p className="mt-3 text-sm text-slate-700">Members report double‑digit savings versus buying solo, depending on category and ship lane.</p>
+              <div className="mt-4 h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div className="h-full" style={{ width: '22%', backgroundColor: colors.gold }} /></div>
+              <p className="mt-2 text-xs text-slate-600">Illustrative savings based on recent pools.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -715,42 +753,6 @@ export function PoolsSection() {
               placeholder="Search pools (e.g., sugar, coffee, fabrics)"
               className="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
             />
-          </div>
-        </div>
-
-        {/* Info cards moved from How it works */}
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Why GroupMOQ</h3>
-            <ul className="mt-3 space-y-2 text-sm text-slate-700">
-              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Factory pricing unlocked at MOQ</li>
-              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Escrow + refund guarantee if MOQ isn’t met</li>
-              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Pooled freight lowers landed cost</li>
-              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Verified suppliers & optional inspection</li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Buying Solo</h3>
-            <ul className="mt-3 space-y-2 text-sm text-slate-700">
-              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Small‑lot or retail pricing</li>
-              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />You carry more risk up front</li>
-              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Higher freight per unit</li>
-              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Limited supplier leverage</li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money</h3>
-            <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
-              <li>Commit → funds held in escrow (Stripe Connect).</li>
-              <li>Pool closes → MOQ met: capture & pay supplier; MOQ not met: instant refund.</li>
-              <li>Shipment arranged → pooled freight → delivery.</li>
-            </ol>
-          </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Percent className="h-5 w-5" style={{ color: colors.navy }} /> Typical savings</h3>
-            <p className="mt-3 text-sm text-slate-700">Members report double‑digit savings versus buying solo, depending on category and ship lane.</p>
-            <div className="mt-4 h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div className="h-full" style={{ width: '22%', backgroundColor: colors.gold }} /></div>
-            <p className="mt-2 text-xs text-slate-600">Illustrative savings based on recent pools.</p>
           </div>
         </div>
 
