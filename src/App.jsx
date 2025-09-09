@@ -7,7 +7,7 @@ import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent } from "lucide-react";
+import { Users, ShieldCheck, Truck, CheckCircle2, DollarSign, Clock, Percent, ArrowRight, Check, X, Factory } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
@@ -297,89 +297,122 @@ export function HowItWorks() {
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-block rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: colors.bgLight, color: colors.navy }}>
             How it works
           </span>
           <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">Pooling power, made simple</h2>
           <p className="mt-3 text-slate-700">
-            GroupMOQ lets many buyers team up to meet a factory’s minimum order quantity (MOQ) and unlock factory pricing—protected by escrow and backed by verified suppliers.
+            Buyers team up to hit a factory’s minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
           </p>
+
+          {/* value chips */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><Check className="h-4 w-4" style={{ color: colors.navy }} /> Verified suppliers</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><ShieldCheck className="h-4 w-4" style={{ color: colors.navy }} /> Escrow protected</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1 text-slate-800"><Truck className="h-4 w-4" style={{ color: colors.navy }} /> Pooled freight</span>
+          </div>
         </div>
 
-        {/* Steps */}
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          <Step
-            icon={Users}
-            title="Join or start a pool"
-            text="Pick a category (sugar, coffee, fabrics, metals, hair) and join an open pool—or start your own with your target quantity."
-            bullets={["Transparent MOQ & deadline", "See current progress in real time"]}
-          />
-          <Step
-            icon={DollarSign}
-            title="Commit with escrow"
-            text="Place your commitment. Funds are held via Stripe Connect in escrow until the pool closes."
-            bullets={["Cancel anytime before close", "If MOQ isn’t met → automatic refund"]}
-          />
-          <Step
-            icon={ShieldCheck}
-            title="Produce, inspect, ship"
-            text="Once MOQ is reached, the supplier begins production. Optional third‑party inspection and compliance docs are provided."
-            bullets={["Verified suppliers only", "Freight pooled to lower landed cost"]}
-          />
+        {/* Timeline steps */}
+        <div className="relative mt-10">
+          <div className="absolute left-10 right-10 top-8 hidden md:block h-0.5 bg-slate-200" />
+          <div className="grid md:grid-cols-3 gap-6">
+            {[{
+              n: 1,
+              Icon: Users,
+              title: 'Join or start a pool',
+              text: 'Pick a category and join an open pool, or create your own with a target quantity and deadline.'
+            },{
+              n: 2,
+              Icon: DollarSign,
+              title: 'Commit with escrow',
+              text: 'Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.'
+            },{
+              n: 3,
+              Icon: Factory,
+              title: 'Produce • Inspect • Ship',
+              text: 'MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates.'
+            }].map(({ n, Icon, title, text }) => (
+              <div key={n} className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="absolute -top-3 md:top-6 md:-translate-y-1/2 left-6 md:left-1/2 md:-translate-x-1/2 w-10 h-10 rounded-full bg-white border border-slate-300 grid place-items-center font-semibold text-slate-900">{n}</div>
+                <div className="mt-6 md:mt-10 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full border border-slate-200 bg-white grid place-items-center">
+                    <Icon className="h-5 w-5" style={{ color: colors.navy }} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+                </div>
+                <p className="mt-3 text-slate-700 text-sm leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Money flow & fees */}
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
+        {/* Proof & persuasion: comparison */}
+        <div className="mt-12 grid md:grid-cols-2 gap-6">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money
-            </h3>
-            <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
-              <li>Commit → funds held in escrow (Stripe Connect).</li>
-              <li>
-                Pool closes:
-                <ul className="list-disc pl-6 mt-1">
-                  <li>MOQ met → capture & pay supplier (minus platform fees).</li>
-                  <li>MOQ not met → instant refund to your original method.</li>
-                </ul>
-              </li>
-              <li>Shipment arranged → pooled freight → delivery.</li>
-            </ol>
+            <h3 className="text-lg font-semibold text-slate-900">Why GroupMOQ</h3>
+            <ul className="mt-3 space-y-2 text-sm text-slate-700">
+              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Factory pricing unlocked at MOQ</li>
+              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Escrow + refund guarantee if MOQ isn’t met</li>
+              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Pooled freight lowers landed cost</li>
+              <li className="flex items-start gap-2"><Check className="h-5 w-5 mt-0.5" style={{ color: colors.navy }} />Verified suppliers & optional inspection</li>
+            </ul>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <DollarSign className="h-5 w-5" style={{ color: colors.navy }} /> Fees at a glance
-            </h3>
-            <ul className="mt-3 list-disc pl-6 text-sm text-slate-700 space-y-1">
-              <li>Platform fee: 2–5% (built into price).</li>
-              <li>Payment processing: pass‑through.</li>
-              <li>Optional inspection & compliance services.</li>
-              <li>Freight pooling & customs brokerage (quoted per pool).</li>
+            <h3 className="text-lg font-semibold text-slate-900">Buying Solo</h3>
+            <ul className="mt-3 space-y-2 text-sm text-slate-700">
+              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Small‑lot or retail pricing</li>
+              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />You carry more risk up front</li>
+              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Higher freight per unit</li>
+              <li className="flex items-start gap-2"><X className="h-5 w-5 mt-0.5 text-slate-400" />Limited supplier leverage</li>
             </ul>
           </div>
         </div>
 
-        {/* Supplier callout */}
+        {/* Money flow & fees (kept, refined) */}
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money</h3>
+            <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
+              <li>Commit → funds held in escrow (Stripe Connect).</li>
+              <li>Pool closes → MOQ met: capture & pay supplier; MOQ not met: instant refund.</li>
+              <li>Shipment arranged → pooled freight → delivery.</li>
+            </ol>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Percent className="h-5 w-5" style={{ color: colors.navy }} /> Typical savings</h3>
+            <p className="mt-3 text-sm text-slate-700">Members report double‑digit savings versus buying solo, depending on category and ship lane.</p>
+            <div className="mt-4 h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div className="h-full" style={{ width: '22%', backgroundColor: colors.gold }} /></div>
+            <p className="mt-2 text-xs text-slate-600">Illustrative savings based on recent pools.</p>
+          </div>
+        </div>
+
+        {/* Risk reversal / CTA band */}
+        <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="h-6 w-6 flex-shrink-0" style={{ color: colors.navy }} />
+            <p className="text-slate-800"><span className="font-semibold">Full refund if MOQ isn’t met.</span> Your commitment is held in escrow with Stripe Connect until the pool closes.</p>
+          </div>
+          <div className="flex gap-3">
+            <a href="#pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
+              Start now <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+            <a href="#create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
+              Start a new pool
+            </a>
+          </div>
+        </div>
+
+        {/* Supplier callout (kept) */}
         <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Are you a supplier?</h3>
-            <p className="text-sm text-slate-700">
-              List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.
-            </p>
+            <p className="text-sm text-slate-700">List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.</p>
           </div>
           <a href="#suppliers" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
             Apply to list
-          </a>
-        </div>
-
-        {/* CTAs */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="#pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
-            Browse open pools
-          </a>
-          <a href="#create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
-            Start a new pool
           </a>
         </div>
       </div>
