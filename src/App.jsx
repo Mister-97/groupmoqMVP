@@ -1,6 +1,11 @@
 import React from "react";
-// Place this file at: src/assets/refinedsugar.png
+// Place these files under: src/assets/
 import refinedSugar from "./assets/refinedsugar.png";
+import sugarHeader from "./assets/sugarheader.png";
+import coffeeHeader from "./assets/coffeebeansheader.png";
+import fabricsHeader from "./assets/fabricheader.png";
+import metalsHeader from "./assets/metalheader.png";
+import hairHeader from "./assets/humanhairheader.png";
 import { motion } from "framer-motion";
 import { Users, ShieldCheck, Truck, DollarSign, CheckCircle2 } from "lucide-react";
 
@@ -94,11 +99,11 @@ export default function Hero() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-2 pt-4">
         <div className="flex items-center justify-center gap-14 overflow-x-auto">
           {[
-            { label: "Sugar", link: "#sugar", image: "https://images.unsplash.com/photo-1505575972945-2798f54b3682?q=80&w=600&auto=format&fit=crop" },
-            { label: "Coffee Beans", link: "#coffee", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=600&auto=format&fit=crop" },
-            { label: "Fabrics", link: "#fabrics", image: "https://images.unsplash.com/photo-1520975922284-5cbf956ae2fd?q=80&w=600&auto=format&fit=crop" },
-            { label: "Metals", link: "#metals", image: "https://images.unsplash.com/photo-1542300059-48cf52b7c0c7?q=80&w=600&auto=format&fit=crop" },
-            { label: "Human Hair", link: "#hair", image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop" },
+            { label: "Sugar", link: "#sugar", image: sugarHeader },
+            { label: "Coffee Beans", link: "#coffee", image: coffeeHeader },
+            { label: "Fabrics", link: "#fabrics", image: fabricsHeader },
+            { label: "Metals", link: "#metals", image: metalsHeader },
+            { label: "Human Hair", link: "#hair", image: hairHeader },
           ].map((c) => (
             <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group">
               <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition" style={{ ['--tw-ring-color']: colors.gold }}>
