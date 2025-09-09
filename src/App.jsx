@@ -268,6 +268,7 @@ export default function Hero() {
 
       <HowItWorks />
       <PoolsSection />
+      <MadeInUSASection />
       <SupplierBand />
       <AfterSupplierInfo />
       <SiteFooter />
@@ -371,6 +372,235 @@ export function HowItWorks() {
         </div>
       </div>
     </section>
+  );
+}
+
+// ---------------------------
+// Pools Section (search + info cards moved here + popular pools)
+// ---------------------------
+export function PoolsSection() {
+  const [q, setQ] = React.useState("");
+
+  const pools = [
+    {
+      id: 1,
+      title: "ICUMSA-45 Refined Sugar",
+      subtitle: "MOQ 10 MT • Saigon/Laem Chabang lanes",
+      category: "Sugar",
+      image: refinedSugar,
+      price: "$XXX/MT",
+      oldPrice: "$YYY/MT",
+      progress: 63,
+      target: 100,
+    },
+    {
+      id: 2,
+      title: "Specialty Coffee Beans (AA)",
+      subtitle: "MOQ 2 MT • HCMC/Hai Phong lanes",
+      category: "Coffee",
+      image: coffeeHeader,
+      price: "$—/MT",
+      oldPrice: "$—/MT",
+      progress: 41,
+      target: 80,
+    },
+    {
+      id: 3,
+      title: "Woven Upholstery Fabrics",
+      subtitle: "MOQ 5,000 m • TH/CN lanes",
+      category: "Fabrics",
+      image: fabricsHeader,
+      price: "$—/m",
+      oldPrice: "$—/m",
+      progress: 28,
+      target: 60,
+    },
+  ];
+
+  const filtered = pools.filter((p) => {
+    const s = q.trim().toLowerCase();
+    if (!s) return true;
+    return (
+      p.title.toLowerCase().includes(s) ||
+      p.category.toLowerCase().includes(s) ||
+      p.subtitle.toLowerCase().includes(s)
+    );
+  });
+
+  return (
+    <section id="pools" className="relative scroll-mt-28 md:scroll-mt-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Header + search */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Popular pools</h2>
+            <p className="text-slate-700">Browse active pools or search by commodity, spec, or lane.</p>
+          </div>
+          <div className="w-full md:w-[420px] relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search pools (e.g., sugar, coffee, fabrics)"
+              className="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            />
+          </div>
+        </div>
+
+        {/* Pool grid */}
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((p) => (
+            <PoolCard key={p.id} pool={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------
+// Made in USA Section (three curated pools, no search)
+// ---------------------------
+export function MadeInUSASection() {
+  const usaPools = [
+    {
+      id: 'us1',
+      title: 'Organic Cane Sugar (USA)',
+      subtitle: 'MOQ 5 MT • Gulf Coast lanes',
+      category: 'Sugar',
+      image: refinedSugar,
+      price: '$—/MT',
+      oldPrice: '$—/MT',
+      progress: 12,
+      target: 40,
+      badge: 'Made in USA',
+    },
+    {
+      id: 'us2',
+      title: 'Premium Cotton Fabric (USA)',
+      subtitle: 'MOQ 3,000 m • Southeast lanes',
+      category: 'Fabrics',
+      image: fabricsHeader,
+      price: '$—/m',
+      oldPrice: '$—/m',
+      progress: 26,
+      target: 60,
+      badge: 'Made in USA',
+    },
+    {
+      id: 'us3',
+      title: 'Corrugated Steel Panels (USA)',
+      subtitle: 'MOQ 20,000 ft² • Midwest lanes',
+      category: 'Metals',
+      image: metalsHeader,
+      price: '$—/ft²',
+      oldPrice: '$—/ft²',
+      progress: 18,
+      target: 50,
+      badge: 'Made in USA',
+    },
+  ];
+
+  return (
+    <section id="made-in-usa" className="relative scroll-mt-28 md:scroll-mt-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        {/* Header */}
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs text-red-800">
+            🇺🇸 Made in USA
+          </span>
+          <h2 className="mt-3 text-2xl sm:text-3xl font-extrabold text-slate-900">Support American manufacturers</h2>
+          <p className="mt-3 text-slate-700 max-w-2xl mx-auto">Pool orders for US-made goods. Shorter lanes, faster delivery, and support domestic production.</p>
+        </div>
+
+        {/* USA Pool grid - no search, just curated */}
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {usaPools.map((pool) => (
+            <USAPoolCard key={pool.id} pool={pool} />
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-10 text-center">
+          <a href="#more-usa" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
+            View all USA pools <ArrowRight className="ml-2 h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PoolCard({ pool }){
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
+        <img src={pool.image} alt={pool.title} className="h-full w-full object-cover" />
+      </div>
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div>
+          <h4 className="font-semibold text-slate-900">{pool.title}</h4>
+          <p className="text-slate-600 text-sm">{pool.subtitle}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-extrabold text-slate-900">{pool.price}</p>
+          <p className="text-slate-500 text-xs line-through">{pool.oldPrice}</p>
+        </div>
+      </div>
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-slate-600 mb-1">
+          <span>Group progress</span>
+          <span>{pool.progress}/{pool.target} joined</span>
+        </div>
+        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-full" style={{ width: `${Math.round((pool.progress/pool.target)*100)}%`, backgroundColor: colors.gold }} />
+        </div>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button className="rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>Join</button>
+        <button className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Details</button>
+      </div>
+    </div>
+  );
+}
+
+function USAPoolCard({ pool }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      {/* Badge */}
+      <div className="flex justify-between items-start mb-3">
+        <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-800">
+          🇺🇸 {pool.badge}
+        </span>
+      </div>
+      
+      <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
+        <img src={pool.image} alt={pool.title} className="h-full w-full object-cover" />
+      </div>
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div>
+          <h4 className="font-semibold text-slate-900">{pool.title}</h4>
+          <p className="text-slate-600 text-sm">{pool.subtitle}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-lg font-extrabold text-slate-900">{pool.price}</p>
+          <p className="text-slate-500 text-xs line-through">{pool.oldPrice}</p>
+        </div>
+      </div>
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-slate-600 mb-1">
+          <span>Group progress</span>
+          <span>{pool.progress}/{pool.target} joined</span>
+        </div>
+        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-full" style={{ width: `${Math.round((pool.progress/pool.target)*100)}%`, backgroundColor: colors.gold }} />
+        </div>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button className="rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>Join</button>
+        <button className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Details</button>
+      </div>
+    </div>
   );
 }
 
@@ -583,123 +813,6 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
-  );
-}
-
-
-// ---------------------------
-// Pools Section (search + info cards moved here + popular pools)
-// ---------------------------
-export function PoolsSection() {
-  const [q, setQ] = React.useState("");
-
-  const pools = [
-    {
-      id: 1,
-      title: "ICUMSA-45 Refined Sugar",
-      subtitle: "MOQ 10 MT • Saigon/Laem Chabang lanes",
-      category: "Sugar",
-      image: refinedSugar,
-      price: "$XXX/MT",
-      oldPrice: "$YYY/MT",
-      progress: 63,
-      target: 100,
-    },
-    {
-      id: 2,
-      title: "Specialty Coffee Beans (AA)",
-      subtitle: "MOQ 2 MT • HCMC/Hai Phong lanes",
-      category: "Coffee",
-      image: coffeeHeader,
-      price: "$—/MT",
-      oldPrice: "$—/MT",
-      progress: 41,
-      target: 80,
-    },
-    {
-      id: 3,
-      title: "Woven Upholstery Fabrics",
-      subtitle: "MOQ 5,000 m • TH/CN lanes",
-      category: "Fabrics",
-      image: fabricsHeader,
-      price: "$—/m",
-      oldPrice: "$—/m",
-      progress: 28,
-      target: 60,
-    },
-  ];
-
-  const filtered = pools.filter((p) => {
-    const s = q.trim().toLowerCase();
-    if (!s) return true;
-    return (
-      p.title.toLowerCase().includes(s) ||
-      p.category.toLowerCase().includes(s) ||
-      p.subtitle.toLowerCase().includes(s)
-    );
-  });
-
-  return (
-    <section id="pools" className="relative scroll-mt-28 md:scroll-mt-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Header + search */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Popular pools</h2>
-            <p className="text-slate-700">Browse active pools or search by commodity, spec, or lane.</p>
-          </div>
-          <div className="w-full md:w-[420px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search pools (e.g., sugar, coffee, fabrics)"
-              className="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
-          </div>
-        </div>
-
-        {/* Pool grid */}
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
-            <PoolCard key={p.id} pool={p} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PoolCard({ pool }){
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
-        <img src={pool.image} alt={pool.title} className="h-full w-full object-cover" />
-      </div>
-      <div className="mt-4 flex items-start justify-between gap-3">
-        <div>
-          <h4 className="font-semibold text-slate-900">{pool.title}</h4>
-          <p className="text-slate-600 text-sm">{pool.subtitle}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-lg font-extrabold text-slate-900">{pool.price}</p>
-          <p className="text-slate-500 text-xs line-through">{pool.oldPrice}</p>
-        </div>
-      </div>
-      <div className="mt-3">
-        <div className="flex justify-between text-xs text-slate-600 mb-1">
-          <span>Group progress</span>
-          <span>{pool.progress}/{pool.target} joined</span>
-        </div>
-        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-          <div className="h-full" style={{ width: `${Math.round((pool.progress/pool.target)*100)}%`, backgroundColor: colors.gold }} />
-        </div>
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <button className="rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>Join</button>
-        <button className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Details</button>
-      </div>
-    </div>
   );
 }
 
