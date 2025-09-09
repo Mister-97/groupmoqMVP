@@ -1,0 +1,8 @@
+import refinedSugar from "./assets/refinedsugar.png";
+
+<img
+  src={refinedSugar}
+  alt="Refined sugar crystals"
+  className="h-full w-full object-cover"
+  loading="eager"
+/>
