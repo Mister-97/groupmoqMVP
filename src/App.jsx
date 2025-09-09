@@ -7,7 +7,7 @@ import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import { motion } from "framer-motion";
-import { Users, ShieldCheck, Truck, DollarSign, CheckCircle2 } from "lucide-react";
+import { Users, ShieldCheck, Truck, DollarSign, CheckCircle2, ClipboardCheck, Factory, HandCoins, Package, Clock } from "lucide-react";
 
 // Neutral, classic theme: warm beige + deep navy with subtle gold accents
 // Easier on the eyes for 35–60 y/o demographic
@@ -58,12 +58,13 @@ const Category = ({ image, label, link }) => (
   </a>
 );
 
+const colors = {
+  navy: "#1B2A41",
+  gold: "#F0A92D",
+  bgLight: "#F7F5F2",
+};
+
 export default function Hero() {
-  const colors = {
-    navy: "#1B2A41",
-    gold: "#F0A92D",
-    bgLight: "#F7F5F2",
-  };
 
   return (
     <section className="relative isolate">
@@ -232,6 +233,109 @@ export default function Hero() {
             </div>
           </div>
         </motion.div>
+      </div>
+    </section>
+  );
+}
+
+
+// ---------------------------
+// How It Works Section
+// ---------------------------
+
+const Step = ({ icon: Icon, title, text, bullets = [] }) => (
+  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="flex items-center gap-3">
+      <div className="h-10 w-10 rounded-full bg-white border border-slate-200 grid place-items-center">
+        <Icon className="h-5 w-5" style={{ color: colors.navy }} />
+      </div>
+      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+    </div>
+    <p className="mt-3 text-slate-700 text-sm leading-relaxed">{text}</p>
+    {bullets.length > 0 && (
+      <ul className="mt-3 space-y-1 text-sm text-slate-700 list-disc pl-6">
+        {bullets.map((b) => (
+          <li key={b}>{b}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
+
+export function HowItWorks() {
+  return (
+    <section id="how" className="relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="inline-block rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: colors.bgLight, color: colors.navy }}>How it works</span>
+          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">Pooling power, made simple</h2>
+          <p className="mt-3 text-slate-700">GroupMOQ lets many buyers team up to meet a factory’s minimum order quantity (MOQ) and unlock factory pricing—protected by escrow and backed by verified suppliers.</p>
+        </div>
+
+        {/* Steps */}
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <Step
+            icon={Users}
+            title="Join or start a pool"
+            text="Pick a category (sugar, coffee, fabrics, metals, hair) and join an open pool—or start your own with your target quantity."
+            bullets={["Transparent MOQ & deadline", "See current progress in real time"]}
+          />
+          <Step
+            icon={HandCoins}
+            title="Commit with escrow"
+            text="Place your commitment. Funds are held via Stripe Connect in escrow until the pool closes."
+            bullets={["Cancel anytime before close", "If MOQ isn’t met → automatic refund"]}
+          />
+          <Step
+            icon={ShieldCheck}
+            title="Produce, inspect, ship"
+            text="Once MOQ is reached, the supplier begins production. Optional third‑party inspection and compliance docs are provided."
+            bullets={["Verified suppliers only", "Freight pooled to lower landed cost"]}
+          />
+        </div>
+
+        {/* Money flow & fees */}
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money</h3>
+            <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
+              <li>Commit → funds held in escrow (Stripe Connect).</li>
+              <li>Pool closes:
+                <ul className="list-disc pl-6 mt-1">
+                  <li>MOQ met → capture & pay supplier (minus platform fees).</li>
+                  <li>MOQ not met → instant refund to your original method.</li>
+                </ul>
+              </li>
+              <li>Shipment arranged → pooled freight → delivery.</li>
+            </ol>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><DollarSign className="h-5 w-5" style={{ color: colors.navy }} /> Fees at a glance</h3>
+            <ul className="mt-3 list-disc pl-6 text-sm text-slate-700 space-y-1">
+              <li>Platform fee: 2–5% (built into price).</li>
+              <li>Payment processing: pass‑through.</li>
+              <li>Optional inspection & compliance services.</li>
+              <li>Freight pooling & customs brokerage (quoted per pool).</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Supplier callout */}
+        <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900">Are you a supplier?</h3>
+            <p className="text-sm text-slate-700">List a product, set your MOQ, and tap into pooled demand. We’ll verify documents before you go live.</p>
+          </div>
+          <a href="#suppliers" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
+            Apply to list
+          </a>
+        </div>
+
+        {/* CTAs */}
+        <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="#pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>Browse open pools</a>
+          <a href="#create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Start a new pool</a>
+        </div>
       </div>
     </section>
   );
