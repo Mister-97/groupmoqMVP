@@ -32,6 +32,7 @@ import fabricsHeader from "./assets/fabricheader.png";
 import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import howWorksBg from "./assets/factoryhowitworkssection.png";
+import factoryBgUrl from "./assets/factoryhowitworkssection.png"; // Added this import
 
 // ------------------------------------------------------------
 // THEME
@@ -450,7 +451,7 @@ function SupplierBand() {
     setNote("");
   };
 
- return (
+  return (
     <section id="suppliers" className="relative overflow-hidden">
       {/* Background (base color + gradient + image) */}
       <div
@@ -615,80 +616,6 @@ function AfterSupplierInfo() {
     </section>
   );
 }
-// ============================================================
-// FOOTER
-// ============================================================
-function SiteFooter() {
-  const [email, setEmail] = React.useState("");
-  const onSubscribe = (e) => {
-    e.preventDefault();
-    if (!email) return;
-    console.log({ email });
-    alert("Thanks! We'll keep you in the loop.");
-    setEmail("");
-  };
-
-  return (
-    <footer className="bg-slate-900 text-white pt-10 pb-4">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-9 w-9 rounded-lg grid place-items-center text-white font-black" style={{ backgroundColor: colors.gold, color: colors.navy }}>
-              G
-            </div>
-            <span className="font-semibold text-white">GroupMOQ</span>
-          </div>
-          <p className="text-white/80 max-w-sm">GroupMOQ helps you unlock factory-direct prices without meeting high minimum order quantities.</p>
-          <div className="flex items-center gap-3 mt-4">
-            <a href="#twitter" className="text-white/80 hover:text-white"><Twitter className="h-5 w-5" /></a>
-            <a href="#facebook" className="text-white/80 hover:text-white"><Facebook className="h-5 w-5" /></a>
-            <a href="#instagram" className="text-white/80 hover:text-white"><Instagram className="h-5 w-5" /></a>
-            <a href="#linkedin" className="text-white/80 hover:text-white"><Linkedin className="h-5 w-5" /></a>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-          <div>
-            <h4 className="font-semibold mb-2">Company</h4>
-            <ul className="space-y-1 text-white/80 text-sm">
-              <li><a href="#about" className="hover:text-white">About</a></li>
-              <li><a href="#contact" className="hover:text-white">Contact</a></li>
-              <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Resources</h4>
-            <ul className="space-y-1 text-white/80 text-sm">
-              <li><a href="#blog" className="hover:text-white">Blog</a></li>
-              <li><a href="#terms" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="#privacy" className="hover:text-white">Privacy Policy</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Newsletter</h4>
-            <p className="text-white/80 text-sm">Stay up to date with new pools and features.</p>
-            <form onSubmit={onSubscribe} className="mt-3 flex gap-2">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email"
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-              <button type="submit" className="rounded-lg px-4 py-2 font-medium text-navy-900 flex-shrink-0" style={{ backgroundColor: colors.gold }}>
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div className="mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-white/60 text-xs">
-        &copy; {new Date().getFullYear()} GroupMOQ. All rights reserved.
-      </div>
-    </footer>
-  );
-}
 
 // ============================================================
 // JOIN MODAL
@@ -767,5 +694,76 @@ function JoinModal({ open, pool, onClose }) {
         </div>
       </div>
     </div>
+  );
+}
+
+// ============================================================
+// FOOTER
+// ============================================================
+function SiteFooter() {
+  const [email, setEmail] = React.useState("");
+  const onSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    console.log({ email });
+    alert("Thanks! We'll keep you in the loop.");
+    setEmail("");
+  };
+
+  return (
+    <footer className="bg-slate-900 text-white pt-10 pb-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10">
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-9 w-9 rounded-lg grid place-items-center text-white font-black bg-white/10">
+              G
+            </div>
+            <span className="font-semibold text-white">GroupMOQ</span>
+          </div>
+          <p className="max-w-md text-slate-400">
+            Unlocking factory pricing for small and medium-sized businesses by pooling orders.
+          </p>
+          <div className="mt-6 flex gap-4">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <Twitter className="h-6 w-6 text-slate-400 hover:text-white" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <Facebook className="h-6 w-6 text-slate-400 hover:text-white" />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <Instagram className="h-6 w-6 text-slate-400 hover:text-white" />
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <Linkedin className="h-6 w-6 text-slate-400 hover:text-white" />
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-semibold mb-4">Stay in the loop</h4>
+          <p className="text-sm text-slate-400">
+            Get updates on new pools and features.
+          </p>
+          <form onSubmit={onSubscribe} className="mt-4 flex gap-2">
+            <label htmlFor="subscribe-email" className="sr-only">Email address</label>
+            <input
+              id="subscribe-email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-white/40 flex-grow"
+            />
+            <button type="submit" className="rounded-lg px-4 py-2 font-medium text-slate-900" style={{ backgroundColor: colors.gold }}>
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
+      <div className="mt-10 pt-4 border-t border-slate-800 text-center text-xs text-slate-500">
+        <p>&copy; {new Date().getFullYear()} GroupMOQ. All rights reserved.</p>
+      </div>
+    </footer>
   );
 }
