@@ -257,7 +257,7 @@ function HowItWorks() {
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="relative rounded-3xl overflow-hidden">
-          {/* Use the imported variable directly */}
+          {/* Background */}
           <div
             className="absolute inset-0 -z-10"
             style={{
@@ -268,6 +268,8 @@ function HowItWorks() {
               backgroundRepeat: "no-repeat",
             }}
           />
+
+          {/* This is the missing code that renders the steps */}
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
