@@ -1,6 +1,6 @@
 cat > src/Router.jsx << 'EOF'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Hero from "./App";  // importing the Hero component as default export
+import Hero from "./App";
 import HowItWorksPage from "./pages/HowItWorksPage";
 
 export default function Router() {
