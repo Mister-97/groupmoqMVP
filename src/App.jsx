@@ -257,10 +257,16 @@ function HowItWorks() {
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="relative rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 -z-10">
-            <img src={metalsHeader} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
-            <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
-          </div>
+          {/* Use CSS background with gradient fallback so section never appears white */}
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url(${metalsHeader})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
 
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">How it works</span>
@@ -440,14 +446,20 @@ function SupplierBand() {
 
   return (
     <section id="suppliers" className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <img src={howWorksBg} alt="Factory background" className="h-full w-full object-cover" aria-hidden />
-        <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-      </div>
+      {/* Background image with warm tint + gradient fallback so it never renders pure white */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url(${howWorksBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Card: Supplier invite */}
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
             <p className="text-white/80">Partner with us</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight">Are you a supplier?</h3>
@@ -467,6 +479,7 @@ function SupplierBand() {
             </div>
           </div>
 
+          {/* Card: Commodity interest capture */}
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
             <p className="text-white/80">Tell us what you need</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -697,9 +710,9 @@ function SiteFooter() {
 // JOIN MODAL (global)
 // ============================================================
 function JoinModal({ open, pool, onClose }) {
-  const platformFeePct = pool?.platformFeePct ?? 0.03; // 3% platform fee
-  const unitPrice = pool?.unitPrice ?? 27; // fallback demo price per unit
-  const minUnits = pool?.minUnits ?? 12; // fallback demo MOQ per user
+  const platformFeePct = pool?.platformFeePct ?? 0.03;
+  const unitPrice = pool?.unitPrice ?? 27;
+  const minUnits = pool?.minUnits ?? 12;
 
   const [units, setUnits] = React.useState(minUnits);
   const [company, setCompany] = React.useState("");
@@ -707,10 +720,7 @@ function JoinModal({ open, pool, onClose }) {
   const [website, setWebsite] = React.useState("");
   const [country, setCountry] = React.useState("United States");
 
-  React.useEffect(() => {
-    if (open) setUnits(minUnits);
-  }, [open, minUnits]);
-
+  React.useEffect(() => { if (open) setUnits(minUnits); }, [open, minUnits]);
   if (!open || !pool) return null;
 
   const est = Math.round(units * unitPrice * (1 + platformFeePct));
@@ -719,41 +729,25 @@ function JoinModal({ open, pool, onClose }) {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!valid) return;
-    const payload = {
-      poolId: pool.id,
-      poolTitle: pool.title,
-      units: Number(units),
-      unitPrice,
-      platformFeePct,
-      estimatedAuthorization: est,
-      company,
-      contact,
-      website,
-      country,
-    };
+    const payload = { poolId: pool.id, poolTitle: pool.title, units: Number(units), unitPrice, platformFeePct, estimatedAuthorization: est, company, contact, website, country };
     console.log("Pledge submitted", payload);
     alert("Pledge submitted! We'll email you a confirmation.");
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 sm:p-6 md:p-8">
+    <div className="fixed inset-0 z-[100] flex items-start md:items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full max-w-2xl rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between p-4 border-b border-slate-200">
+      {/* Make dialog scrollable and keyboard-friendly */}
+      <div className="relative w-full max-w-2xl rounded-2xl bg-white shadow-xl max-h-[85vh] overflow-y-auto">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-slate-200 bg-white/95 backdrop-blur">
           <h3 className="text-lg sm:text-xl font-semibold text-slate-900">Join: {pool.title}</h3>
           <button onClick={onClose} className="h-9 w-9 grid place-items-center rounded-md hover:bg-slate-50">✕</button>
         </div>
         <form onSubmit={onSubmit} className="p-6 space-y-5">
           <div>
             <label className="block text-sm font-medium text-slate-800">Units to pledge (min {minUnits})</label>
-            <input
-              type="number"
-              min={minUnits}
-              value={units}
-              onChange={(e) => setUnits(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
+            <input type="number" min={minUnits} value={units} onChange={(e) => setUnits(Number(e.target.value))} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
             <p className="mt-1 text-xs text-slate-500">You can edit or cancel before the pool locks.</p>
           </div>
 
@@ -761,59 +755,34 @@ function JoinModal({ open, pool, onClose }) {
             <p className="text-sm font-medium text-slate-800">Estimated Cost (authorization at pledge)</p>
             <p className="text-3xl font-extrabold text-slate-900 mt-1">${est.toLocaleString()}</p>
             <p className="text-xs text-slate-500">${unitPrice} per unit • Platform fee {Math.round(platformFeePct * 100)}% included</p>
-            <p className="text-xs text-slate-500">
-              Funds <span className="font-semibold">authorized</span> now, <span className="font-semibold">moved to escrow on lock</span>
-            </p>
+            <p className="text-xs text-slate-500">Funds <span className="font-semibold">authorized</span> now, <span className="font-semibold">moved to escrow on lock</span></p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-800">Company / Brand</label>
-            <input
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="e.g., MP Global Exports"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
+            <input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g., MP Global Exports" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-800">Contact Name</label>
-            <input
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Your full name"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
+            <input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Your full name" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-800">Website / Social</label>
-            <input
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              placeholder="https://… or @handle"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300"
-            />
+            <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://… or @handle" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-800">Country (USA‑only for MVP)</label>
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-slate-300"
-            >
+            <select value={country} onChange={(e) => setCountry(e.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-slate-300">
               <option>United States</option>
             </select>
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
-              Cancel
-            </button>
-            <button type="submit" disabled={!valid} className="rounded-lg px-4 py-2 font-medium text-white disabled:opacity-60" style={{ backgroundColor: colors.navy }}>
-              Join & Authorize
-            </button>
+            <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Cancel</button>
+            <button type="submit" disabled={!valid} className="rounded-lg px-4 py-2 font-medium text-white disabled:opacity-60" style={{ backgroundColor: colors.navy }}>Join & Authorize</button>
           </div>
         </form>
       </div>
