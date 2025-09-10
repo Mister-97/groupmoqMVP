@@ -615,7 +615,6 @@ function AfterSupplierInfo() {
     </section>
   );
 }
-
 // ============================================================
 // FOOTER
 // ============================================================
@@ -692,84 +691,80 @@ function SiteFooter() {
 }
 
 // ============================================================
-// JOIN MODAL (global)
+// JOIN MODAL
 // ============================================================
 function JoinModal({ open, pool, onClose }) {
-  const platformFeePct = pool?.platformFeePct ?? 0.03;
-  const unitPrice = pool?.unitPrice ?? 27;
-  const minUnits = pool?.minUnits ?? 12;
+  const [quantity, setQuantity] = React.useState("");
 
-  const [units, setUnits] = React.useState(minUnits);
-  const [company, setCompany] = React.useState("");
-  const [contact, setContact] = React.useState("");
-  const [website, setWebsite] = React.useState("");
-  const [country, setCountry] = React.useState("United States");
-
-  React.useEffect(() => { if (open) setUnits(minUnits); }, [open, minUnits]);
-  if (!open || !pool) return null;
-
-  const est = Math.round(units * unitPrice * (1 + platformFeePct));
-  const valid = Number(units) >= minUnits && company.trim() && contact.trim();
-
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!valid) return;
-    const payload = { poolId: pool.id, poolTitle: pool.title, units: Number(units), unitPrice, platformFeePct, estimatedAuthorization: est, company, contact, website, country };
-    console.log("Pledge submitted", payload);
-    alert("Pledge submitted! We'll email you a confirmation.");
+    console.log(`Joining pool ${pool.id} with quantity ${quantity}`);
     onClose();
+    setQuantity("");
   };
 
+  if (!open || !pool) return null;
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-start md:items-center justify-center p-4 sm:p-6 md:p-8">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      {/* Make dialog scrollable and keyboard-friendly */}
-      <div className="relative w-full max-w-2xl rounded-2xl bg-white shadow-xl max-h-[85vh] overflow-y-auto">
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-slate-200 bg-white/95 backdrop-blur">
-          <h3 className="text-lg sm:text-xl font-semibold text-slate-900">Join: {pool.title}</h3>
-          <button onClick={onClose} className="h-9 w-9 grid place-items-center rounded-md hover:bg-slate-50">✕</button>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm grid place-items-center">
+      <div
+        className="relative mx-auto w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="text-xl font-semibold text-slate-900">Join a pool</h3>
+            <p className="mt-1 text-sm text-slate-600">
+              Your commitment is held in escrow until the pool meets its MOQ.
+            </p>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+            <X className="h-6 w-6" />
+          </button>
         </div>
-        <form onSubmit={onSubmit} className="p-6 space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Units to pledge (min {minUnits})</label>
-            <input type="number" min={minUnits} value={units} onChange={(e) => setUnits(Number(e.target.value))} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
-            <p className="mt-1 text-xs text-slate-500">You can edit or cancel before the pool locks.</p>
-          </div>
 
-          <div>
-            <p className="text-sm font-medium text-slate-800">Estimated Cost (authorization at pledge)</p>
-            <p className="text-3xl font-extrabold text-slate-900 mt-1">${est.toLocaleString()}</p>
-            <p className="text-xs text-slate-500">${unitPrice} per unit • Platform fee {Math.round(platformFeePct * 100)}% included</p>
-            <p className="text-xs text-slate-500">Funds <span className="font-semibold">authorized</span> now, <span className="font-semibold">moved to escrow on lock</span></p>
+        <div className="mt-6">
+          <div className="flex items-center gap-3">
+            <img
+              src={pool.image}
+              alt={pool.title}
+              className="h-16 w-16 rounded-lg object-cover"
+            />
+            <div>
+              <p className="font-semibold text-slate-900">{pool.title}</p>
+              <p className="text-sm text-slate-600">{pool.subtitle}</p>
+            </div>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Company / Brand</label>
-            <input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g., MP Global Exports" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Contact Name</label>
-            <input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="Your full name" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Website / Social</label>
-            <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://… or @handle" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-800">Country (USA‑only for MVP)</label>
-            <select value={country} onChange={(e) => setCountry(e.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-slate-300">
-              <option>United States</option>
-            </select>
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>Cancel</button>
-            <button type="submit" disabled={!valid} className="rounded-lg px-4 py-2 font-medium text-white disabled:opacity-60" style={{ backgroundColor: colors.navy }}>Join & Authorize</button>
-          </div>
+        <form onSubmit={handleSubmit} className="mt-6">
+          <label htmlFor="quantity" className="block text-sm font-medium text-slate-700">
+            Quantity
+          </label>
+          <input
+            id="quantity"
+            type="number"
+            min="1"
+            required
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            placeholder={`Enter quantity in ${pool.category === "Sugar" ? "MT" : pool.category === "Fabrics" ? "m" : "units"}`}
+          />
+          <button
+            type="submit"
+            className="mt-4 w-full rounded-lg px-4 py-2.5 font-medium text-white hover:opacity-90"
+            style={{ backgroundColor: colors.navy }}
+          >
+            Commit to pool
+          </button>
         </form>
+
+        <div className="mt-4 text-xs text-slate-500 text-center">
+          <p>
+            You can cancel your commitment at any time before the pool closes.
+          </p>
+        </div>
       </div>
     </div>
   );
