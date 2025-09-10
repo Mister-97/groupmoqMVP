@@ -253,24 +253,29 @@ function HowItWorks() {
     { n: 3, Icon: Factory, title: "Produce • Inspect • Ship", text: "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates." },
   ];
 
-  // SUPER-RELIABLE URL for CSS background
-  const metalBgUrl = new URL("./assets/metalheader.png", import.meta.url).href;
+ // Remove this line:
+// const metalBgUrl = new URL("./assets/metalheader.png", import.meta.url).href;
 
-  return (
-    <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="relative rounded-3xl overflow-hidden">
-          {/* Background (base color + gradient + image) */}
-          <div
-            className="absolute inset-0 -z-10"
-            style={{
-              backgroundColor: "#0F1826",
-              backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${metalBgUrl}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
+return (
+  <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="relative rounded-3xl overflow-hidden">
+        {/* Use the imported variable directly */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundColor: "#0F1826",
+            backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${metalsHeader}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* ...rest of the component */}
+      </div>
+    </div>
+  </section>
+);
 
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
