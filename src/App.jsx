@@ -250,26 +250,32 @@ function HowItWorks() {
   const steps = [
     { n: 1, Icon: Users, title: "Join or start a pool", text: "Pick a category and join an open pool, or create your own with a target quantity and deadline." },
     { n: 2, Icon: DollarSign, title: "Commit with escrow", text: "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close." },
-    { n: 3, Icon: Factory, title: "Produce • Inspect • Ship", text: "MOQ met → supplier starts production. Optional third‑party inspection. Freight is pooled for better rates." },
+    { n: 3, Icon: Factory, title: "Produce • Inspect • Ship", text: "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates." },
   ];
+
+  // SUPER-RELIABLE URL for CSS background
+  const metalBgUrl = new URL("./assets/metalheader.png", import.meta.url).href;
 
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="relative rounded-3xl overflow-hidden">
-          {/* Use CSS background with gradient fallback so section never appears white */}
+          {/* Background (base color + gradient + image) */}
           <div
             className="absolute inset-0 -z-10"
             style={{
-              backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url(${metalsHeader})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
+              backgroundColor: "#0F1826",
+              backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${metalBgUrl}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           />
 
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
-            <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">How it works</span>
+            <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
+              How it works
+            </span>
             <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Pooling power, made simple</h2>
             <p className="mt-3 text-white/90">
               Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met, production starts and freight is pooled to cut landed cost.
@@ -288,10 +294,12 @@ function HowItWorks() {
                     <p className="mt-3 text-white/90 text-sm leading-relaxed">{text}</p>
                   </div>
 
+                  {/* Step number badge */}
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 grid place-items-center text-sm font-semibold text-white">
                     {n}
                   </div>
 
+                  {/* little connectors on desktop */}
                   {idx < steps.length - 1 && (
                     <>
                       <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-white/40" />
@@ -444,29 +452,35 @@ function SupplierBand() {
     setNote("");
   };
 
+  // SUPER-RELIABLE URL for CSS background
+  const factoryBgUrl = new URL("./assets/factoryhowitworkssection.png", import.meta.url).href;
+
   return (
     <section id="suppliers" className="relative overflow-hidden">
-      {/* Background image with warm tint + gradient fallback so it never renders pure white */}
+      {/* Background (base color + gradient + image) */}
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url(${howWorksBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          backgroundColor: "#0F1826",
+          backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${factoryBgUrl}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Card: Supplier invite */}
+          {/* Supplier invite card */}
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
             <p className="text-white/80">Partner with us</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight">Are you a supplier?</h3>
-            <p className="mt-3 text-white/90 text-sm sm:text-base">List a product, set your MOQ, and tap into pooled demand. We'll verify documents before you go live.</p>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">
+              List a product, set your MOQ, and tap into pooled demand. We'll verify documents before you go live.
+            </p>
             <ul className="mt-4 space-y-2 text-white/90 text-sm">
               <li className="flex items-center gap-2"><CheckCircle2 className="h-5 w-5 text-white" /> Verified by GroupMOQ</li>
-              <li className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-white" /> Escrow‑protected payouts</li>
+              <li className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-white" /> Escrow-protected payouts</li>
               <li className="flex items-center gap-2"><Truck className="h-5 w-5 text-white" /> Access pooled freight</li>
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -479,13 +493,15 @@ function SupplierBand() {
             </div>
           </div>
 
-          {/* Card: Commodity interest capture */}
+          {/* Commodity interest capture card */}
           <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-white shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
             <p className="text-white/80">Tell us what you need</p>
             <h3 className="mt-2 text-3xl font-extrabold tracking-tight flex items-center gap-2">
               <Lightbulb className="h-8 w-8" /> Interested in a certain commodity?
             </h3>
-            <p className="mt-3 text-white/90 text-sm sm:text-base">Send us your suggestions and we will work to source verified suppliers before going live.</p>
+            <p className="mt-3 text-white/90 text-sm sm:text-base">
+              Send us your suggestions and we will work to source verified suppliers before going live.
+            </p>
 
             <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label htmlFor="commodity" className="sr-only">Commodity</label>
@@ -522,7 +538,9 @@ function SupplierBand() {
                 <button type="submit" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
                   Send suggestion <Send className="ml-2 h-4 w-4" />
                 </button>
-                <a href="#pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">See open pools</a>
+                <a href="#pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
+                  See open pools
+                </a>
               </div>
             </form>
           </div>
