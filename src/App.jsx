@@ -253,30 +253,21 @@ function HowItWorks() {
     { n: 3, Icon: Factory, title: "Produce • Inspect • Ship", text: "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates." },
   ];
 
- // Remove this line:
-// const metalBgUrl = new URL("./assets/metalheader.png", import.meta.url).href;
-
-return (
-  <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-      <div className="relative rounded-3xl overflow-hidden">
-        {/* Use the imported variable directly */}
-        <div
-          className="absolute inset-0 -z-10"
-          style={{
-            backgroundColor: "#0F1826",
-            backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${metalsHeader}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-        {/* ...rest of the component */}
-      </div>
-    </div>
-  </section>
-);
-
+  return (
+    <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="relative rounded-3xl overflow-hidden">
+          {/* Use the imported variable directly */}
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              backgroundColor: "#0F1826",
+              backgroundImage: `linear-gradient(rgba(27,42,65,0.72), rgba(27,42,65,0.72)), url('${metalsHeader}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
@@ -640,90 +631,62 @@ function SiteFooter() {
   };
 
   return (
-    <footer className="relative mt-10">
-      <div className="h-1 w-full" style={{ backgroundColor: colors.gold }} />
-
-      <div className="relative bg-[#0F1826] text-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><ShieldCheck className="h-4 w-4" /> Escrow protected</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><CheckCircle2 className="h-4 w-4" /> Verified suppliers</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><Truck className="h-4 w-4" /> Pooled freight</span>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="grid gap-10 lg:grid-cols-5">
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg grid place-items-center font-black" style={{ backgroundColor: colors.gold, color: colors.navy }}>G</div>
-                <span className="text-lg font-semibold">GroupMOQ</span>
-              </div>
-              <p className="mt-3 text-white/80 text-sm max-w-md">Group buying for real-world goods. Team up to hit factory MOQs and unlock wholesale pricing—safely.</p>
-
-              <form onSubmit={onSubscribe} className="mt-5 flex items-center gap-2 max-w-md">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email"
-                  className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
-                />
-                <button type="submit" className="rounded-lg px-4 py-3 font-medium text-navy-900 hover:opacity-90" style={{ backgroundColor: colors.gold }}>
-                  Subscribe
-                </button>
-              </form>
-
-              <div className="mt-4 flex flex-wrap gap-4 text-sm text-white/80">
-                <a href="mailto:hello@groupmoq.com" className="inline-flex items-center gap-2 hover:text-white"><Mail className="h-4 w-4" /> hello@groupmoq.com</a>
-                <span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> +1 (555) 010-1234</span>
-              </div>
-
-              <div className="mt-4 flex items-center gap-3">
-                <a href="#" aria-label="Twitter" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Twitter className="h-4 w-4" /></a>
-                <a href="#" aria-label="LinkedIn" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Linkedin className="h-4 w-4" /></a>
-                <a href="#" aria-label="Instagram" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Instagram className="h-4 w-4" /></a>
-                <a href="#" aria-label="Facebook" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Facebook className="h-4 w-4" /></a>
-              </div>
+    <footer className="bg-slate-900 text-white pt-10 pb-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10">
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-9 w-9 rounded-lg grid place-items-center text-white font-black" style={{ backgroundColor: colors.gold, color: colors.navy }}>
+              G
             </div>
-
-            <div className="grid gap-10 sm:grid-cols-3 lg:col-span-3">
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Product</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#how" className="hover:text-white inline-flex items-center gap-1">How it works <ArrowUpRight className="h-3 w-3" /></a></li>
-                  <li><a href="#pools" className="hover:text-white">Open pools</a></li>
-                  <li><a href="#create" className="hover:text-white">Start a new pool</a></li>
-                  <li><a href="#sugar" className="hover:text-white">Categories</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Company</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#suppliers" className="hover:text-white">For suppliers</a></li>
-                  <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-                  <li><a href="#contact" className="hover:text-white">Contact</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Legal</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#terms" className="hover:text-white">Terms</a></li>
-                  <li><a href="#privacy" className="hover:text-white">Privacy</a></li>
-                  <li><a href="#compliance" className="hover:text-white">Compliance</a></li>
-                </ul>
-              </div>
-            </div>
+            <span className="font-semibold text-white">GroupMOQ</span>
+          </div>
+          <p className="text-white/80 max-w-sm">GroupMOQ helps you unlock factory-direct prices without meeting high minimum order quantities.</p>
+          <div className="flex items-center gap-3 mt-4">
+            <a href="#twitter" className="text-white/80 hover:text-white"><Twitter className="h-5 w-5" /></a>
+            <a href="#facebook" className="text-white/80 hover:text-white"><Facebook className="h-5 w-5" /></a>
+            <a href="#instagram" className="text-white/80 hover:text-white"><Instagram className="h-5 w-5" /></a>
+            <a href="#linkedin" className="text-white/80 hover:text-white"><Linkedin className="h-5 w-5" /></a>
           </div>
         </div>
 
-        <div className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-xs text-white/70 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>© {new Date().getFullYear()} GroupMOQ. All rights reserved.</p>
-            <p className="text-white/60">Built for buyers. Backed by escrow.</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <div>
+            <h4 className="font-semibold mb-2">Company</h4>
+            <ul className="space-y-1 text-white/80 text-sm">
+              <li><a href="#about" className="hover:text-white">About</a></li>
+              <li><a href="#contact" className="hover:text-white">Contact</a></li>
+              <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Resources</h4>
+            <ul className="space-y-1 text-white/80 text-sm">
+              <li><a href="#blog" className="hover:text-white">Blog</a></li>
+              <li><a href="#terms" className="hover:text-white">Terms of Service</a></li>
+              <li><a href="#privacy" className="hover:text-white">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Newsletter</h4>
+            <p className="text-white/80 text-sm">Stay up to date with new pools and features.</p>
+            <form onSubmit={onSubscribe} className="mt-3 flex gap-2">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
+              />
+              <button type="submit" className="rounded-lg px-4 py-2 font-medium text-navy-900 flex-shrink-0" style={{ backgroundColor: colors.gold }}>
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
+      </div>
+      <div className="mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-white/60 text-xs">
+        &copy; {new Date().getFullYear()} GroupMOQ. All rights reserved.
       </div>
     </footer>
   );
