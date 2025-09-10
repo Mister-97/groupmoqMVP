@@ -450,10 +450,7 @@ function SupplierBand() {
     setNote("");
   };
 
-  // SUPER-RELIABLE URL for CSS background
-  const factoryBgUrl = new URL("./assets/factoryhowitworkssection.png", import.meta.url).href;
-
-  return (
+ return (
     <section id="suppliers" className="relative overflow-hidden">
       {/* Background (base color + gradient + image) */}
       <div
