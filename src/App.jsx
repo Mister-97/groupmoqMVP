@@ -108,7 +108,7 @@ export default function Hero() {
             <span className="font-semibold text-slate-900">GroupMOQ</span>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-slate-700 text-sm">
-            <a href="#how" className="hover:text-slate-900">
+            <a href="/how-it-works" className="hover:text-slate-900">
               How it works
             </a>
             <a href="#pools" className="hover:text-slate-900">
@@ -810,7 +810,7 @@ export function SiteFooter() {
               <div>
                 <h4 className="text-sm font-semibold text-white/90">Product</h4>
                 <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#how" className="hover:text-white inline-flex items-center gap-1">How it works <ArrowUpRight className="h-3 w-3" /></a></li>
+                  <li><a href="/how-it-works" className="hover:text-white inline-flex items-center gap-1">How it works <ArrowUpRight className="h-3 w-3" /></a></li>
                   <li><a href="#pools" className="hover:text-white">Open pools</a></li>
                   <li><a href="#create" className="hover:text-white">Start a new pool</a></li>
                   <li><a href="#sugar" className="hover:text-white">Categories</a></li>
