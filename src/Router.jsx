@@ -1,4 +1,3 @@
-cat > src/Router.jsx << 'EOF'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Hero from "./App";
 import HowItWorksPage from "./pages/HowItWorksPage";
