@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Hero from "./App";
-import HowItWorksPage from "./pages/HowItWorksPage";
+import HowItWorksPage from "./pages/HowItWorksPage.jsx";
 
 export default function Router() {
   return (
