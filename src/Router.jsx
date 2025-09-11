@@ -4,7 +4,7 @@ import HowItWorksPage from "./pages/HowItWorksPage.jsx";
 
 export default function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/groupmoqMVP">
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/how-it-works" element={<HowItWorksPage />} />
