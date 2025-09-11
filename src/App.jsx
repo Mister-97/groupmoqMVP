@@ -8,6 +8,8 @@ import metalsHeader from "./assets/metalheader.png";
 import hairHeader from "./assets/humanhairheader.png";
 import howWorksBg from "./assets/factoryhowitworkssection.png";
 import { motion } from "framer-motion";
+import TopNav from "./components/TopNav";
+import { Link } from "react-router-dom";
 import {
   Users,
   ShieldCheck,
@@ -100,31 +102,7 @@ export default function Hero() {
         </div>
 
         {/* Nav (minimal) */}
-        <header className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg" style={{ backgroundColor: colors.navy }}>
-              <div className="h-full w-full grid place-items-center text-white font-black">G</div>
-            </div>
-            <span className="font-semibold text-slate-900">GroupMOQ</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-slate-700 text-sm">
-            <a href="/how-it-works" className="hover:text-slate-900">
-              How it works
-            </a>
-            <a href="#pools" className="hover:text-slate-900">
-              Open pools
-            </a>
-            <a href="#suppliers" className="hover:text-slate-900">
-              For suppliers
-            </a>
-            <a href="#faq" className="hover:text-slate-900">
-              FAQ
-            </a>
-            <a href="#signin" className="rounded-md border border-slate-300 px-3 py-1.5 hover:bg-slate-50">
-              Sign in
-            </a>
-          </nav>
-        </header>
+        <TopNav />
 
         {/* Categories */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-2 pt-4">
