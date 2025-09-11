@@ -1,7 +1,6 @@
 // src/Router.jsx
 import React from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import App from "./App"; // Home page (landing)
 import HowItWorksPage from "./pages/HowItWorksPage";
 import OpenPoolsPage from "./pages/OpenPoolsPage";
@@ -11,7 +10,6 @@ import ForSuppliersPage from "./pages/ForSuppliersPage";
 // Component to handle smooth scrolling when using #hash links
 function ScrollToHash() {
   const location = useLocation();
-
   React.useEffect(() => {
     if (location.hash) {
       setTimeout(() => {
@@ -25,13 +23,12 @@ function ScrollToHash() {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
   }, [location.pathname, location.hash]);
-
   return null;
 }
 
 export default function AppRouter() {
   return (
-    <BrowserRouter basename="/groupmoqMVP">
+    <HashRouter>
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<App />} />
@@ -40,6 +37,6 @@ export default function AppRouter() {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/suppliers" element={<ForSuppliersPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
