@@ -17,8 +17,8 @@ export default function TopNav({ inverted = false }) {
 
   return (
     <>
-      {/* Fixed nav bar */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-transparent">
+      {/* Fixed nav */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -68,7 +68,9 @@ export default function TopNav({ inverted = false }) {
 
           {/* Mobile menu button */}
           <button
-            className={`md:hidden ${inverted ? "text-white" : "text-slate-900"}`}
+            className={`md:hidden ${
+              inverted ? "text-white" : "text-slate-900"
+            }`}
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -77,20 +79,40 @@ export default function TopNav({ inverted = false }) {
 
         {/* Mobile dropdown */}
         {mobileOpen && (
-          <div className="md:hidden bg-[#0F1826] text-white px-6 py-6 space-y-5 shadow-lg">
-            <NavLink to="/" className="block text-lg" onClick={() => setMobileOpen(false)}>
+          <div className="md:hidden bg-[#0F1826] text-white px-6 py-6 space-y-4 shadow-lg">
+            <NavLink
+              to="/"
+              className="block text-lg"
+              onClick={() => setMobileOpen(false)}
+            >
               Home
             </NavLink>
-            <NavLink to="/how-it-works" className="block text-lg" onClick={() => setMobileOpen(false)}>
+            <NavLink
+              to="/how-it-works"
+              className="block text-lg"
+              onClick={() => setMobileOpen(false)}
+            >
               How it works
             </NavLink>
-            <NavLink to="/pools" className="block text-lg" onClick={() => setMobileOpen(false)}>
+            <NavLink
+              to="/pools"
+              className="block text-lg"
+              onClick={() => setMobileOpen(false)}
+            >
               Open pools
             </NavLink>
-            <NavLink to="/suppliers" className="block text-lg" onClick={() => setMobileOpen(false)}>
+            <NavLink
+              to="/suppliers"
+              className="block text-lg"
+              onClick={() => setMobileOpen(false)}
+            >
               For suppliers
             </NavLink>
-            <NavLink to="/how-it-works#faq" className="block text-lg" onClick={() => setMobileOpen(false)}>
+            <NavLink
+              to="/how-it-works#faq"
+              className="block text-lg"
+              onClick={() => setMobileOpen(false)}
+            >
               FAQ
             </NavLink>
             <Link
@@ -104,7 +126,7 @@ export default function TopNav({ inverted = false }) {
         )}
       </header>
 
-      {/* Spacer div so content doesn't go under nav */}
+      {/* Spacer so content isn't hidden under nav */}
       <div className="h-16"></div>
     </>
   );
