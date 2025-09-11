@@ -1,7 +1,6 @@
-// src/Router.jsx
 import React from "react";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
-import App from "./App"; // Home page (landing)
+import App from "./App";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import OpenPoolsPage from "./pages/OpenPoolsPage";
 import SignInPage from "./pages/SignInPage";
@@ -18,7 +17,7 @@ function ScrollToHash() {
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, 100); // small delay so page has rendered
+      }, 100);
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
