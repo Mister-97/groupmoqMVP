@@ -81,7 +81,7 @@ export default function Hero() {
   };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col pt-16">
       <section className="relative isolate">
         {/* Background: light, easy on eyes */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#F7F5F2] to-[#ECEBE7]" />
@@ -279,7 +279,7 @@ export default function Hero() {
       {/* Global modals */}
       <JoinModal open={joinOpen} pool={activePool} onClose={closeJoin} />
       <PoolDetailsModal open={detailsOpen} pool={activePool} onClose={closeDetails} />
-    </>
+    </div>
   );
 }
 
