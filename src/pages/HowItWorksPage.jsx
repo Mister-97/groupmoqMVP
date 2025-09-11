@@ -17,7 +17,7 @@ import {
 import metalsHeader from "../assets/metalheader.png"; // page hero background (feel free to swap to howWorksBg)
 
 // Optional: reuse footer from your existing file if it's exported
-import { SiteFooter } from "../App"; // if path differs, update accordingly
+import { SiteFooter } from "../App.jsx"; // if path differs, update accordingly
 
 const colors = {
   navy: "#1B2A41",
