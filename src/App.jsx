@@ -296,7 +296,7 @@ export function HowItWorks() {
             <img
               src={metalsHeader}
               alt="How it works background"
-              className="h-full w-full object-cover brightness-[0.6]"
+              className="h-full w-full object-cover"
               aria-hidden
             />
             <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
