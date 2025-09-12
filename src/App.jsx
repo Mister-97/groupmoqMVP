@@ -293,17 +293,14 @@ export function HowItWorks() {
         {/* Banner with background + steps inside */}
         <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
-  <img
-    src={metalsHeader}
-    alt="How it works background"
-    className="h-full w-full object-cover"
-    aria-hidden
-  />
-  {/* Dark overlay */}
-  <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)] mix-blend-multiply" />
-  {/* Optional gradient to add depth */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
-</div>
+            <img
+              src={metalsHeader}
+              alt="How it works background"
+              className="h-full w-full object-cover brightness-[0.6]"
+              aria-hidden
+            />
+            <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
+          </div>
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
