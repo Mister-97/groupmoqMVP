@@ -287,20 +287,42 @@ export default function Hero() {
    How It Works Section (unchanged visuals)
    =========================== */
 export function HowItWorks() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="relative rounded-3xl overflow-hidden">
+        <div className="relative rounded-3xl overflow-hidden min-h-[600px] sm:min-h-[700px]">
+          {/* Background with fallback */}
           <div className="absolute inset-0 -z-10">
-            {/* Apply same brightness/dark filter everywhere */}
-            <img
-              src={metalsHeader}
-              alt="How it works background"
-              className="h-full w-full object-cover brightness-[0.6]"
-              aria-hidden
-            />
+            {/* Fallback gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900" />
+            
+            {/* Image overlay */}
+            {!imageError && (
+              <img
+                src={metalsHeader}
+                alt="How it works background"
+                className={`h-full w-full object-cover brightness-[0.6] transition-opacity duration-500 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => {
+                  console.warn('Background image failed to load');
+                  setImageError(true);
+                }}
+                loading="eager"
+                decoding="async"
+                aria-hidden="true"
+              />
+            )}
+            
+            {/* Dark overlay */}
             <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
           </div>
+
+          {/* Content */}
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
