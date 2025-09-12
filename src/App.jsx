@@ -291,7 +291,7 @@ export function HowItWorks() {
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* Banner with background + steps inside */}
-        <div className="<div className="relative rounded-3xl overflow-hidden min-h-[500px]">
+        <div className="relative rounded-3xl overflow-hidden min-h-[500px]">
           <div className="absolute inset-0 -z-10">
             <img
               src={metalsHeader}
