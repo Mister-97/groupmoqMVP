@@ -105,7 +105,7 @@ export default function Hero() {
         <TopNav />
 
         {/* Categories */}
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-2 pt-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-55 pt-55">
           <div className="flex items-center justify-center gap-14 overflow-x-auto">
             {[
               { label: "Sugar", link: "#sugar", image: sugarHeader },
@@ -114,15 +114,15 @@ export default function Hero() {
               { label: "Metals", link: "#metals", image: metalsHeader },
               { label: "Human Hair", link: "#hair", image: hairHeader },
             ].map((c) => (
-              <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group">
-                <div
-                  className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
-                  style={{ "--tw-ring-color": colors.gold }}
-                >
-                  <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
-                </div>
-                <span className="text-slate-800 text-sm font-medium">{c.label}</span>
-              </a>
+              <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group p-1">
+  <div
+    className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
+    style={{ "--tw-ring-color": colors.gold }}
+  >
+    <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
+  </div>
+  <span className="text-slate-800 text-sm font-medium">{c.label}</span>
+</a>
             ))}
           </div>
         </div>
@@ -187,6 +187,7 @@ export default function Hero() {
                     <p className="text-slate-900 font-semibold">{value}</p>
                   </div>
                 </div>
+                
               ))}
             </div>
           </motion.div>

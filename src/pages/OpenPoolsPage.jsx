@@ -325,7 +325,7 @@ export default function OpenPoolsPage() {
       <div className="relative isolate bg-gradient-to-b from-[#0F1826] to-[#15233A] text-white">
   <TopNav inverted />   {/* <-- use the shared nav here */}
 
-  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-10">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 pt-10">
           <div className="grid lg:grid-cols-12 gap-8 items-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}

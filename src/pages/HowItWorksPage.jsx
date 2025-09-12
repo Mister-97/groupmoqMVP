@@ -221,7 +221,7 @@ export default function HowItWorksPage() {
   {/* Nav inside hero */}
   <TopNav inverted />   {/* <-- use inverted here */}
 
-  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 lg:pb-16 text-center text-white">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 lg:pb-16 pt-10 text-center text-white">
           <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10">
             How it works
           </span>
