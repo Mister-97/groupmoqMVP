@@ -287,42 +287,20 @@ export default function Hero() {
    How It Works Section (unchanged visuals)
    =========================== */
 export function HowItWorks() {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="relative rounded-3xl overflow-hidden min-h-[600px] sm:min-h-[700px]">
-          {/* Background with fallback */}
+        {/* Banner with background + steps inside */}
+        <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900" />
-            
-            {/* Image overlay */}
-            {!imageError && (
-              <img
-                src={metalsHeader}
-                alt="How it works background"
-                className={`h-full w-full object-cover brightness-[0.6] transition-opacity duration-500 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => {
-                  console.warn('Background image failed to load');
-                  setImageError(true);
-                }}
-                loading="eager"
-                decoding="async"
-                aria-hidden="true"
-              />
-            )}
-            
-            {/* Dark overlay */}
+            <img
+              src={metalsHeader}
+              alt="How it works background"
+              className="h-full w-full object-cover"
+              aria-hidden
+            />
             <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
           </div>
-
-          {/* Content */}
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
@@ -331,17 +309,49 @@ export function HowItWorks() {
               Pooling power, made simple
             </h2>
             <p className="mt-3 text-white/90">
-              Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. 
-              When the pool closes and MOQ is met, production starts and freight is pooled 
-              to cut landed cost.
+              Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. When the
+              pool closes and MOQ is met, production starts and freight is pooled to cut landed
+              cost.
             </p>
 
+            {/* value chips */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90">
+                <Check className="h-4 w-4" /> Verified suppliers
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90">
+                <ShieldCheck className="h-4 w-4" /> Escrow protected
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90">
+                <Truck className="h-4 w-4" /> Pooled freight
+              </span>
+            </div>
+
+            {/* Steps inside banner */}
             <div className="mt-8">
               <div className="grid md:grid-cols-3 gap-6">
                 {[
-                  { n: 1, Icon: Users, title: "Join or start a pool", text: "Pick a category and join an open pool, or create your own with a target quantity and deadline." },
-                  { n: 2, Icon: DollarSign, title: "Commit with escrow", text: "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close." },
-                  { n: 3, Icon: Factory, title: "Produce • Inspect • Ship", text: "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates." },
+                  {
+                    n: 1,
+                    Icon: Users,
+                    title: "Join or start a pool",
+                    text:
+                      "Pick a category and join an open pool, or create your own with a target quantity and deadline.",
+                  },
+                  {
+                    n: 2,
+                    Icon: DollarSign,
+                    title: "Commit with escrow",
+                    text:
+                      "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.",
+                  },
+                  {
+                    n: 3,
+                    Icon: Factory,
+                    title: "Produce • Inspect • Ship",
+                    text:
+                      "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates.",
+                  },
                 ].map(({ n, Icon, title, text }, idx, arr) => (
                   <div key={n} className="relative group">
                     <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md p-6 text-left text-white shadow-[0_6px_30px_rgba(0,0,0,0.25)]">
@@ -353,15 +363,21 @@ export function HowItWorks() {
                       </div>
                       <p className="mt-3 text-white/90 text-sm leading-relaxed">{text}</p>
                     </div>
+
+                    {/* Number badge */}
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 grid place-items-center text-sm font-semibold text-white">
                       {n}
                     </div>
+
+                    {/* Arrow connector (desktop) */}
                     {idx < arr.length - 1 && (
                       <>
                         <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-white/40" />
                         <div className="hidden md:block absolute top-1/2 -right-8 translate-x-full -translate-y-1/2 w-0 h-0 border-y-[10px] border-y-transparent border-l-[10px] border-l-white/60" />
                       </>
                     )}
+
+                    {/* Arrow connector (mobile, vertical) */}
                     {idx < arr.length - 1 && (
                       <div className="md:hidden absolute -bottom-7 left-1/2 -translate-x-1/2">
                         <div className="mx-auto w-[2px] h-5 bg-white/40" />
