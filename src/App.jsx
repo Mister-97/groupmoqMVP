@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 // Place these files under: src/assets/
 import refinedSugar from "./assets/refinedsugar.png";
 import sugarHeader from "./assets/sugarheader.png";
