@@ -292,17 +292,26 @@ export function HowItWorks() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            <img src={metalsHeader} alt="How it works background" className="h-full w-full object-cover" aria-hidden />
+            {/* Apply same brightness/dark filter everywhere */}
+            <img
+              src={metalsHeader}
+              alt="How it works background"
+              className="h-full w-full object-cover brightness-[0.6]"
+              aria-hidden
+            />
             <div className="absolute inset-0 bg-[rgba(27,42,65,0.72)]" />
           </div>
           <div className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14 text-center">
             <span className="inline-block rounded-full px-3 py-1 text-xs font-medium border border-white/20 bg-white/10 text-white">
               How it works
             </span>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">Pooling power, made simple</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-white">
+              Pooling power, made simple
+            </h2>
             <p className="mt-3 text-white/90">
-              Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. When the pool closes and MOQ is met,
-              production starts and freight is pooled to cut landed cost.
+              Buyers team up to hit a factory's minimum order (MOQ). Funds sit in escrow. 
+              When the pool closes and MOQ is met, production starts and freight is pooled 
+              to cut landed cost.
             </p>
 
             <div className="mt-8">
