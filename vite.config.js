@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  base: '/groupmoqMVP/', // This must match your repo name exactly
   server: {
-    hmr: {
-      overlay: false
-    }
+    host: true,
+    port: 5173
   }
 })
