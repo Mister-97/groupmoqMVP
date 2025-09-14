@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import TopNav from "../components/TopNav.jsx";
 import { SiteFooter } from "../App.jsx";
+import { Link } from "react-router-dom";
 import {
   Factory,
   CheckCircle2,
@@ -58,20 +59,20 @@ export default function ForSuppliersPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-8 flex flex-wrap justify-center gap-4"
           >
-            <a
-              href="#apply"
-              className="px-8 py-3 rounded-xl font-medium text-navy-900 shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5"
-              style={{ backgroundColor: colors.gold }}
-            >
-              Apply as a Supplier{" "}
-              <ArrowRight className="inline-block ml-2 h-5 w-5" />
-            </a>
-            <a
-              href="/supplier-login"
-              className="px-8 py-3 rounded-xl font-medium border border-white/50 text-white hover:bg-white hover:text-navy transition"
-            >
-              Supplier Login
-            </a>
+            <Link
+  to="/supplier-setup"
+  className="px-8 py-3 rounded-xl font-medium text-navy-900 shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5"
+  style={{ backgroundColor: colors.gold }}
+>
+  Apply as a Supplier <ArrowRight className="inline-block ml-2 h-5 w-5" />
+</Link>
+            <Link
+  to="/signin"
+  className="px-8 py-3 rounded-xl font-medium text-white hover:opacity-90 shadow-md hover:shadow-xl transition"
+  style={{ backgroundColor: colors.navy }}
+>
+  Login 
+</Link>
           </motion.div>
         </div>
       </section>
@@ -221,19 +222,20 @@ export default function ForSuppliersPage() {
           <b> Secure your spot today.</b>
         </p>
         <div className="mt-6 flex justify-center gap-4">
-          <a
-            href="/supplier-signup"
-            className="px-8 py-3 rounded-xl font-medium text-white hover:opacity-90 shadow-md hover:shadow-xl transition"
-            style={{ backgroundColor: colors.navy }}
-          >
-            Apply Now
-          </a>
-          <a
-            href="/supplier-login"
-            className="px-8 py-3 rounded-xl font-medium border border-slate-300 text-slate-700 hover:bg-slate-50"
-          >
-            Supplier Login
-          </a>
+          <Link
+  to="/supplier-setup"
+  className="px-8 py-3 rounded-xl font-medium text-white hover:opacity-90 shadow-md hover:shadow-xl transition"
+  style={{ backgroundColor: colors.navy }}
+>
+  Apply Now
+</Link>
+          <Link
+  to="/signin"
+  className="px-8 py-3 rounded-xl font-medium text-white hover:opacity-90 shadow-md hover:shadow-xl transition"
+  style={{ backgroundColor: colors.navy }}
+>
+  Supplier Login 
+</Link>
         </div>
       </section>
 

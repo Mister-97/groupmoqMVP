@@ -8,6 +8,9 @@ import SignUpPage from "./pages/SignUpPage";        // Add this
 import Dashboard from "./pages/Dashboard";          // Add this
 import ProfileSetup from "./pages/ProfileSetup";    // Add this
 import ForSuppliersPage from "./pages/ForSuppliersPage";
+import SupplierSetup from "./pages/SupplierSetup";
+import SupplierDashboard from "./pages/SupplierDashboard";
+
 
 
 // Component to handle smooth scrolling when using #hash links
@@ -42,6 +45,8 @@ export default function AppRouter() {
         <Route path="/dashboard" element={<Dashboard />} />         {/* Add this */}
         <Route path="/profile-setup" element={<ProfileSetup />} />  {/* Add this */}
         <Route path="/suppliers" element={<ForSuppliersPage />} />
+        <Route path="/supplier-setup" element={<SupplierSetup />} />
+        <Route path="/supplier-dashboard" element={<SupplierDashboard />} />
       </Routes>
     </HashRouter>
   );
