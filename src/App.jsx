@@ -1,15 +1,5 @@
-import React, { useState } from 'react';
-// Place these files under: src/assets/
-import refinedSugar from "./assets/refinedsugar.png";
-import sugarHeader from "./assets/sugarheader.png";
-import coffeeHeader from "./assets/coffeebeansheader.png";
-import fabricsHeader from "./assets/fabricheader.png";
-import metalsHeader from "./assets/metalheader.png";
-import hairHeader from "./assets/humanhairheader.png";
-import howWorksBg from "./assets/factoryhowitworkssection.png";
+import React from "react";
 import { motion } from "framer-motion";
-import TopNav from "./components/TopNav";
-import { Link } from "react-router-dom";
 import {
   Users,
   ShieldCheck,
@@ -35,17 +25,39 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-// Neutral, classic theme
+// pages
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import ProfileSetup from "./pages/ProfileSetup";
+import Dashboard from "./pages/Dashboard";
+
+// components
+import TopNav from "./components/TopNav";
+
+// assets
+import refinedSugar from "./assets/refinedsugar.png";
+import sugarHeader from "./assets/sugarheader.png";
+import coffeeHeader from "./assets/coffeebeansheader.png";
+import fabricsHeader from "./assets/fabricheader.png";
+import metalsHeader from "./assets/metalheader.png";
+import hairHeader from "./assets/humanhairheader.png";
+import howWorksBg from "./assets/factoryhowitworkssection.png";
+
+// theme colors
 const colors = {
   navy: "#1B2A41",
   gold: "#F0A92D",
   bgLight: "#F7F5F2",
 };
 
+function App() {
+  return <Hero />;
+}
+
 /* ============================================================
    ROOT (kept named "Hero" so you don't have to change imports)
    ============================================================ */
-export default function Hero() {
+function Hero() {
   // --- Global modals state (Join + Details) ---
   const [joinOpen, setJoinOpen] = React.useState(false);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
@@ -1152,7 +1164,6 @@ function PoolDetailsModal({ open, pool, onClose }) {
 function BridgeOpenJoin() {
   React.useEffect(() => {
     const handler = (e) => {
-      // Give the page a tick so Details can close before opening Join
       setTimeout(() => {
         const evt = new CustomEvent("bridge-open-join", { detail: e.detail });
         window.dispatchEvent(evt);
@@ -1163,3 +1174,5 @@ function BridgeOpenJoin() {
   }, []);
   return null;
 }
+
+export default App; // ✅ only one default export
