@@ -1,4 +1,5 @@
 import React from "react";
+import { Navigate } from 'react-router-dom'; // ADD THIS LINE
 import { motion } from "framer-motion";
 import {
   Users,
@@ -25,11 +26,23 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-// pages
+// Firebase Auth Context (assuming you have this)
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+// Existing pages (keep as-is)
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfileSetup from "./pages/ProfileSetup";
 import Dashboard from "./pages/Dashboard";
+
+// NEW Pool marketplace pages
+import PoolCreation from './pages/PoolCreation';
+import PoolDetail from './pages/PoolDetail';
+import PoolBrowse from './pages/PoolBrowse';
+import MyPools from './pages/MyPools';
+import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
+import NotFound from './pages/NotFound';
 
 // components
 import TopNav from "./components/TopNav";
@@ -38,9 +51,10 @@ import TopNav from "./components/TopNav";
 import refinedSugar from "./assets/refinedsugar.png";
 import sugarHeader from "./assets/sugarheader.png";
 import coffeeHeader from "./assets/coffeebeansheader.png";
-import fabricsHeader from "./assets/fabricheader.png";
-import metalsHeader from "./assets/metalheader.png";
-import hairHeader from "./assets/humanhairheader.png";
+import fabricsHeader from "./assets/cookingoilheader.png";
+import howitworkss from "./assets/metalheader.png";
+import metalsHeader from "./assets/riceheader.png";
+import hairHeader from "./assets/flourheader.png";
 import howWorksBg from "./assets/factoryhowitworkssection.png";
 
 // theme colors
@@ -50,15 +64,59 @@ const colors = {
   bgLight: "#F7F5F2",
 };
 
-function App() {
-  return <Hero />;
-}
 
-/* ============================================================
-   ROOT (kept named "Hero" so you don't have to change imports)
-   ============================================================ */
-function Hero() {
-  // --- Global modals state (Join + Details) ---
+// Protected Route Component
+const ProtectedRoute = ({ children, requiredUserType = null }) => {
+  const { user, userProfile, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/signin" replace />;
+  }
+
+  if (requiredUserType && userProfile?.userType !== requiredUserType) {
+    const redirectPath = userProfile?.userType === 'supplier' ? '/dashboard' : '/dashboard';
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return children;
+};
+
+// Public Route Component
+const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
+
+
+// Landing Page Component
+function LandingPage() {
   const [joinOpen, setJoinOpen] = React.useState(false);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
   const [activePool, setActivePool] = React.useState(null);
@@ -74,7 +132,6 @@ function Hero() {
   const closeJoin = () => setJoinOpen(false);
   const closeDetails = () => setDetailsOpen(false);
 
-  // Featured pool object used by the hero card's buttons
   const featuredPool = {
     id: "sugar-icumsa-45",
     title: "ICUMSA-45 Refined Sugar",
@@ -85,20 +142,17 @@ function Hero() {
     oldPrice: "$YYY/MT",
     progress: 63,
     target: 100,
-    // numbers used by Join modal
-    unitLabel: "unit", // display-only label for screenshot parity
+    unitLabel: "unit",
     minUnits: 12,
-    unitPrice: 27, // $27 per unit matches your screenshot math
+    unitPrice: 27,
     currency: "USD",
   };
 
   return (
     <div className="min-h-screen flex flex-col pt-16">
       <section className="relative isolate">
-        {/* Background: light, easy on eyes */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#F7F5F2] to-[#ECEBE7]" />
 
-        {/* Announcement bar */}
         <div className="w-full border-b border-slate-200 bg-white/70 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-3 text-slate-800 text-sm">
             <span
@@ -113,33 +167,30 @@ function Hero() {
           </div>
         </div>
 
-        {/* Nav (minimal) */}
         <TopNav />
 
-        {/* Categories */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-55 pt-55">
           <div className="flex items-center justify-center gap-14 overflow-x-auto">
             {[
-              { label: "Sugar", link: "#sugar", image: sugarHeader },
-              { label: "Coffee Beans", link: "#coffee", image: coffeeHeader },
-              { label: "Fabrics", link: "#fabrics", image: fabricsHeader },
-              { label: "Metals", link: "#metals", image: metalsHeader },
-              { label: "Human Hair", link: "#hair", image: hairHeader },
-            ].map((c) => (
+  { label: "Sugar", link: "/pools?category=sugar", image: sugarHeader },
+  { label: "Coffee Beans", link: "/pools?category=coffee", image: coffeeHeader },
+  { label: "Cooking Oils", link: "/pools?category=oils", image: fabricsHeader }, // Reusing fabricsHeader temporarily
+  { label: "Rice", link: "/pools?category=rice", image: metalsHeader }, // Reusing metalsHeader temporarily  
+  { label: "Flour", link: "/pools?category=flour", image: hairHeader }, // Reusing hairHeader temporarily
+].map((c) => (
               <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group p-1">
-  <div
-    className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
-    style={{ "--tw-ring-color": colors.gold }}
-  >
-    <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
-  </div>
-  <span className="text-slate-800 text-sm font-medium">{c.label}</span>
-</a>
+                <div
+                  className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
+                  style={{ "--tw-ring-color": colors.gold }}
+                >
+                  <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
+                </div>
+                <span className="text-slate-800 text-sm font-medium">{c.label}</span>
+              </a>
             ))}
           </div>
         </div>
 
-        {/* Hero content */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-16 grid lg:grid-cols-12 gap-10 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -166,15 +217,15 @@ function Hero() {
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => openJoin(featuredPool)}
+              <a
+                href="/pools"
                 className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
                 style={{ backgroundColor: colors.navy }}
               >
-                Join an open pool
-              </button>
+                Browse Pools
+              </a>
               <a
-                href="#create"
+                href="/pool/create"
                 className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50"
                 style={{ borderColor: colors.navy }}
               >
@@ -182,7 +233,6 @@ function Hero() {
               </a>
             </div>
 
-            {/* trust stats unchanged */}
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
                 { Icon: Users, label: "Buyers pooled", value: "2,340+" },
@@ -199,12 +249,10 @@ function Hero() {
                     <p className="text-slate-900 font-semibold">{value}</p>
                   </div>
                 </div>
-                
               ))}
             </div>
           </motion.div>
 
-          {/* Right column: deal card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -254,13 +302,13 @@ function Hero() {
               </div>
 
               <div className="mt-5 grid sm:grid-cols-2 gap-3">
-                <button
-                  onClick={() => openJoin(featuredPool)}
-                  className="rounded-lg px-4 py-2.5 font-medium text-white hover:opacity-90"
+                <a
+                  href="/pool/sugar-icumsa-45"
+                  className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 font-medium text-white hover:opacity-90"
                   style={{ backgroundColor: colors.navy }}
                 >
-                  Join this pool
-                </button>
+                  View Pool
+                </a>
                 <button
                   onClick={() => openDetails(featuredPool)}
                   className="rounded-lg border px-4 py-2.5 text-slate-900 hover:bg-slate-50"
@@ -289,25 +337,21 @@ function Hero() {
       <AfterSupplierInfo />
       <SiteFooter />
 
-      {/* Global modals */}
       <JoinModal open={joinOpen} pool={activePool} onClose={closeJoin} />
       <PoolDetailsModal open={detailsOpen} pool={activePool} onClose={closeDetails} />
     </div>
   );
 }
 
-/* ===========================
-   How It Works Section (unchanged visuals)
-   =========================== */
-export function HowItWorks() {
+// How It Works Section
+function HowItWorks() {
   return (
     <section id="how" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        {/* Banner with background + steps inside */}
         <div className="relative rounded-3xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <img
-              src={metalsHeader}
+              src={howitworkss}
               alt="How it works background"
               className="h-full w-full object-cover"
               aria-hidden
@@ -327,7 +371,6 @@ export function HowItWorks() {
               cost.
             </p>
 
-            {/* value chips */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-white/90">
                 <Check className="h-4 w-4" /> Verified suppliers
@@ -340,7 +383,6 @@ export function HowItWorks() {
               </span>
             </div>
 
-            {/* Steps inside banner */}
             <div className="mt-8">
               <div className="grid md:grid-cols-3 gap-6">
                 {[
@@ -348,22 +390,19 @@ export function HowItWorks() {
                     n: 1,
                     Icon: Users,
                     title: "Join or start a pool",
-                    text:
-                      "Pick a category and join an open pool, or create your own with a target quantity and deadline.",
+                    text: "Pick a category and join an open pool, or create your own with a target quantity and deadline.",
                   },
                   {
                     n: 2,
                     Icon: DollarSign,
                     title: "Commit with escrow",
-                    text:
-                      "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.",
+                    text: "Your funds are held via Stripe Connect until the pool closes. Cancel anytime before close.",
                   },
                   {
                     n: 3,
                     Icon: Factory,
                     title: "Produce • Inspect • Ship",
-                    text:
-                      "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates.",
+                    text: "MOQ met → supplier starts production. Optional third-party inspection. Freight is pooled for better rates.",
                   },
                 ].map(({ n, Icon, title, text }, idx, arr) => (
                   <div key={n} className="relative group">
@@ -377,12 +416,10 @@ export function HowItWorks() {
                       <p className="mt-3 text-white/90 text-sm leading-relaxed">{text}</p>
                     </div>
 
-                    {/* Number badge */}
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 grid place-items-center text-sm font-semibold text-white">
                       {n}
                     </div>
 
-                    {/* Arrow connector (desktop) */}
                     {idx < arr.length - 1 && (
                       <>
                         <div className="hidden md:block absolute top-1/2 -right-8 w-12 h-[2px] bg-white/40" />
@@ -390,7 +427,6 @@ export function HowItWorks() {
                       </>
                     )}
 
-                    {/* Arrow connector (mobile, vertical) */}
                     {idx < arr.length - 1 && (
                       <div className="md:hidden absolute -bottom-7 left-1/2 -translate-x-1/2">
                         <div className="mx-auto w-[2px] h-5 bg-white/40" />
@@ -408,15 +444,13 @@ export function HowItWorks() {
   );
 }
 
-/* ===========================
-   Pools Section (wired to Join/Details)
-   =========================== */
-export function PoolsSection({ onJoin, onDetails }) {
+// Pools Section
+function PoolsSection({ onJoin, onDetails }) {
   const [q, setQ] = React.useState("");
 
   const pools = [
     {
-      id: 1,
+      id: "sugar-icumsa-45",
       title: "ICUMSA-45 Refined Sugar",
       subtitle: "MOQ 10 MT • Saigon/Laem Chabang lanes",
       category: "Sugar",
@@ -431,7 +465,7 @@ export function PoolsSection({ onJoin, onDetails }) {
       currency: "USD",
     },
     {
-      id: 2,
+      id: "coffee-aa",
       title: "Specialty Coffee Beans (AA)",
       subtitle: "MOQ 2 MT • HCMC/Hai Phong lanes",
       category: "Coffee",
@@ -446,7 +480,7 @@ export function PoolsSection({ onJoin, onDetails }) {
       currency: "USD",
     },
     {
-      id: 3,
+      id: "woven-fabrics",
       title: "Woven Upholstery Fabrics",
       subtitle: "MOQ 5,000 m • TH/CN lanes",
       category: "Fabrics",
@@ -471,7 +505,6 @@ export function PoolsSection({ onJoin, onDetails }) {
   return (
     <section id="pools" className="relative scroll-mt-28 md:scroll-mt-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 lg:pt-14 pb-6">
-        {/* Header + search */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Popular pools</h2>
@@ -488,11 +521,20 @@ export function PoolsSection({ onJoin, onDetails }) {
           </div>
         </div>
 
-        {/* Pool grid */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (
             <PoolCard key={p.id} pool={p} onJoin={() => onJoin(p)} onDetails={() => onDetails(p)} />
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <a
+            href="/pools"
+            className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
+            style={{ backgroundColor: colors.navy }}
+          >
+            View All Pools <ArrowRight className="ml-2 h-4 w-4" />
+          </a>
         </div>
       </div>
     </section>
@@ -519,19 +561,25 @@ function PoolCard({ pool, onJoin, onDetails }) {
       <div className="mt-3">
         <div className="flex justify-between text-xs text-slate-600 mb-1">
           <span>Group progress</span>
-          <span>
-            {pool.progress}/{pool.target} joined
-          </span>
+          <span>{pool.progress}/{pool.target} joined</span>
         </div>
         <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
           <div className="h-full" style={{ width: `${pct}%`, backgroundColor: colors.gold }} />
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <button onClick={onJoin} className="rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
-          Join
-        </button>
-        <button onClick={onDetails} className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
+        <a 
+          href={`/pool/${pool.id}`}
+          className="inline-flex items-center justify-center rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" 
+          style={{ backgroundColor: colors.navy }}
+        >
+          View Pool
+        </a>
+        <button 
+          onClick={onDetails} 
+          className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" 
+          style={{ borderColor: colors.navy }}
+        >
           Details
         </button>
       </div>
@@ -539,13 +587,11 @@ function PoolCard({ pool, onJoin, onDetails }) {
   );
 }
 
-/* ===========================
-   Made in USA (passes handlers through)
-   =========================== */
-export function MadeInUSASection({ onJoin, onDetails }) {
+// Made in USA Section
+function MadeInUSASection({ onJoin, onDetails }) {
   const usaPools = [
     {
-      id: "us1",
+      id: "us-organic-sugar",
       title: "Organic Cane Sugar (USA)",
       subtitle: "MOQ 5 MT • Gulf Coast lanes",
       category: "Sugar",
@@ -560,7 +606,7 @@ export function MadeInUSASection({ onJoin, onDetails }) {
       currency: "USD",
     },
     {
-      id: "us2",
+      id: "us-cotton-fabric",
       title: "Premium Cotton Fabric (USA)",
       subtitle: "MOQ 3,000 m • Southeast lanes",
       category: "Fabrics",
@@ -575,7 +621,7 @@ export function MadeInUSASection({ onJoin, onDetails }) {
       currency: "USD",
     },
     {
-      id: "us3",
+      id: "us-steel-panels",
       title: "Corrugated Steel Panels (USA)",
       subtitle: "MOQ 20,000 ft² • Midwest lanes",
       category: "Metals",
@@ -612,7 +658,7 @@ export function MadeInUSASection({ onJoin, onDetails }) {
 
         <div className="mt-8 text-center">
           <a
-            href="#more-usa"
+            href="/pools?category=usa"
             className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
             style={{ backgroundColor: colors.navy }}
           >
@@ -624,10 +670,8 @@ export function MadeInUSASection({ onJoin, onDetails }) {
   );
 }
 
-/* ===========================
-   Supplier + After + Footer (unchanged visuals)
-   =========================== */
-export function SupplierBand() {
+// Supplier Band
+function SupplierBand() {
   const [commodity, setCommodity] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [note, setNote] = React.useState("");
@@ -663,7 +707,7 @@ export function SupplierBand() {
               <li className="flex items-center gap-2"><Truck className="h-5 w-5 text-white" /> Access pooled freight</li>
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#apply" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
+              <a href="/register?type=supplier" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
                 Apply to list <ArrowRight className="ml-2 h-4 w-4" />
               </a>
               <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
@@ -716,7 +760,7 @@ export function SupplierBand() {
                 <button type="submit" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
                   Send suggestion <Send className="ml-2 h-4 w-4" />
                 </button>
-                <a href="#pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
+                <a href="/pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
                   See open pools
                 </a>
               </div>
@@ -728,12 +772,13 @@ export function SupplierBand() {
   );
 }
 
-export function AfterSupplierInfo() {
+// After Supplier Info
+function AfterSupplierInfo() {
   return (
     <section className="relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Why Buyers &amp; Suppliers Choose GroupMOQ</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Why Buyers & Suppliers Choose GroupMOQ</h2>
           <p className="mt-2 text-slate-700 max-w-2xl mx-auto">Unlock factory pricing, reduce risk with escrow, and cut landed costs through pooled freight.</p>
         </div>
 
@@ -762,7 +807,7 @@ export function AfterSupplierInfo() {
             <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Clock className="h-5 w-5" style={{ color: colors.navy }} /> What happens to your money</h3>
             <ol className="mt-3 list-decimal pl-6 text-sm text-slate-700 space-y-1">
               <li>Commit → funds held in escrow (Stripe Connect).</li>
-              <li>Pool closes → MOQ met: capture &amp; pay supplier; MOQ not met: instant refund.</li>
+              <li>Pool closes → MOQ met: capture & pay supplier; MOQ not met: instant refund.</li>
               <li>Shipment arranged → pooled freight → delivery.</li>
             </ol>
           </div>
@@ -783,10 +828,10 @@ export function AfterSupplierInfo() {
             <p className="text-slate-800"><span className="font-semibold">Full refund if MOQ isn't met.</span> Your commitment is held in escrow with Stripe Connect until the pool closes.</p>
           </div>
           <div className="flex gap-3">
-            <a href="#pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
+            <a href="/pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
               Start now <ArrowRight className="ml-2 h-4 w-4" />
             </a>
-            <a href="#create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
+            <a href="/pool/create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
               Start a new pool
             </a>
           </div>
@@ -796,383 +841,300 @@ export function AfterSupplierInfo() {
   );
 }
 
-export function SiteFooter() {
-  const [email, setEmail] = React.useState("");
-  const onSubscribe = (e) => {
-    e.preventDefault();
-    if (!email) return;
-    console.log({ email });
-    alert("Thanks! We'll keep you in the loop.");
-    setEmail("");
-  };
-
+// Site Footer
+function SiteFooter() {
   return (
-    <footer className="relative mt-10">
-      <div className="h-1 w-full" style={{ backgroundColor: colors.gold }} />
-      <div className="relative bg-[#0F1826] text-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><ShieldCheck className="h-4 w-4" /> Escrow protected</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><CheckCircle2 className="h-4 w-4" /> Verified suppliers</span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"><Truck className="h-4 w-4" /> Pooled freight</span>
+    <footer className="relative bg-slate-900 text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid gap-8 md:grid-cols-4">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg grid place-items-center" style={{ backgroundColor: colors.gold }}>
+                <span className="font-bold text-slate-900">G</span>
+              </div>
+              <span className="text-xl font-bold">GroupMOQ</span>
+            </div>
+            <p className="mt-3 text-slate-300 max-w-md">
+              Pool orders to unlock wholesale pricing from manufacturers. Power in numbers, savings in bulk.
+            </p>
+            <div className="mt-4 flex gap-3">
+              <a href="#" className="text-slate-400 hover:text-white">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-slate-400 hover:text-white">
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-slate-400 hover:text-white">
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a href="#" className="text-slate-400 hover:text-white">
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold">Platform</h3>
+            <ul className="mt-3 space-y-2 text-sm text-slate-400">
+              <li><a href="/pools" className="hover:text-white">Browse Pools</a></li>
+              <li><a href="/pool/create" className="hover:text-white">Start a Pool</a></li>
+              <li><a href="/my-pools" className="hover:text-white">My Pools</a></li>
+              <li><a href="/dashboard" className="hover:text-white">Dashboard</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold">Company</h3>
+            <ul className="mt-3 space-y-2 text-sm text-slate-400">
+              <li><a href="#how" className="hover:text-white">How it Works</a></li>
+              <li><a href="#suppliers" className="hover:text-white">For Suppliers</a></li>
+              <li><a href="/register?type=supplier" className="hover:text-white">Apply to List</a></li>
+              <li><a href="/contact" className="hover:text-white">Contact</a></li>
+            </ul>
           </div>
         </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="grid gap-10 lg:grid-cols-5">
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg grid place-items-center font-black" style={{ backgroundColor: colors.gold, color: colors.navy }}>G</div>
-                <span className="text-lg font-semibold">GroupMOQ</span>
-              </div>
-              <p className="mt-3 text-white/80 text-sm max-w-md">Group buying for real-world goods. Team up to hit factory MOQs and unlock wholesale pricing—safely.</p>
-              <form onSubmit={onSubscribe} className="mt-5 flex items-center gap-2 max-w-md">
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/30" />
-                <button type="submit" className="rounded-lg px-4 py-3 font-medium text-navy-900 hover:opacity-90" style={{ backgroundColor: colors.gold }}>
-                  Subscribe
-                </button>
-              </form>
-              <div className="mt-4 flex flex-wrap gap-4 text-sm text-white/80">
-                <a href="mailto:hello@groupmoq.com" className="inline-flex items-center gap-2 hover:text-white"><Mail className="h-4 w-4" /> hello@groupmoq.com</a>
-                <span className="inline-flex items-center gap-2"><Phone className="h-4 w-4" /> +1 (555) 010-1234</span>
-              </div>
-              <div className="mt-4 flex items-center gap-3">
-                <a href="#" aria-label="Twitter" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Twitter className="h-4 w-4" /></a>
-                <a href="#" aria-label="LinkedIn" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Linkedin className="h-4 w-4" /></a>
-                <a href="#" aria-label="Instagram" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Instagram className="h-4 w-4" /></a>
-                <a href="#" aria-label="Facebook" className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/5 hover:bg-white/10"><Facebook className="h-4 w-4" /></a>
-              </div>
+        <div className="mt-8 pt-8 border-t border-slate-800 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-wrap gap-4 text-sm text-slate-400">
+            <a href="/terms" className="hover:text-white">Terms</a>
+            <a href="/privacy" className="hover:text-white">Privacy</a>
+            <a href="/help" className="hover:text-white">Help</a>
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              <a href="mailto:hello@groupmoq.com" className="hover:text-white">hello@groupmoq.com</a>
             </div>
-
-            <div className="grid gap-10 sm:grid-cols-3 lg:col-span-3">
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Product</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="/how-it-works" className="hover:text-white inline-flex items-center gap-1">How it works <ArrowUpRight className="h-3 w-3" /></a></li>
-                  <li><a href="#pools" className="hover:text-white">Open pools</a></li>
-                  <li><a href="#create" className="hover:text-white">Start a new pool</a></li>
-                  <li><a href="#sugar" className="hover:text-white">Categories</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Company</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#suppliers" className="hover:text-white">For suppliers</a></li>
-                  <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-                  <li><a href="#contact" className="hover:text-white">Contact</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold text-white/90">Legal</h4>
-                <ul className="mt-3 space-y-2 text-white/80 text-sm">
-                  <li><a href="#terms" className="hover:text-white">Terms</a></li>
-                  <li><a href="#privacy" className="hover:text-white">Privacy</a></li>
-                  <li><a href="#compliance" className="hover:text-white">Compliance</a></li>
-                </ul>
-              </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              <a href="tel:+1-555-0123" className="hover:text-white">+1 (555) 012-3456</a>
             </div>
           </div>
-        </div>
-
-        <div className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 text-xs text-white/70 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>© {new Date().getFullYear()} GroupMOQ. All rights reserved.</p>
-            <p className="text-white/60">Built for buyers. Backed by escrow.</p>
-          </div>
+          <p className="text-sm text-slate-500">© 2024 GroupMOQ. All rights reserved.</p>
         </div>
       </div>
     </footer>
   );
 }
 
-/* ===========================
-   JOIN MODAL (scrollable + upgrades)
-   =========================== */
+// Join Modal Component
 function JoinModal({ open, pool, onClose }) {
-  const [units, setUnits] = React.useState(12);
-  const [company, setCompany] = React.useState("");
-  const [contact, setContact] = React.useState("");
-  const [site, setSite] = React.useState("");
-  const [country, setCountry] = React.useState("United States");
-  const [notes, setNotes] = React.useState("");
-  const [showUpgrades, setShowUpgrades] = React.useState(true);
-
-  // Upgrade toggles
-  const [rush, setRush] = React.useState(false);            // +$2 / unit
-  const [packaging, setPackaging] = React.useState(false);  // +$1.50 / unit
-  const [qc, setQc] = React.useState(false);                // +$300 flat
-  const [privateLabel, setPrivateLabel] = React.useState(false); // +$200 flat
+  const [quantity, setQuantity] = React.useState(pool?.minUnits || 1);
+  const [agreedToTerms, setAgreedToTerms] = React.useState(false);
 
   React.useEffect(() => {
-    if (pool?.minUnits) setUnits(pool.minUnits);
+    if (pool) {
+      setQuantity(pool.minUnits || 1);
+    }
   }, [pool]);
 
   if (!open || !pool) return null;
 
-  const perUnitUpcharge = (rush ? 2 : 0) + (packaging ? 1.5 : 0);
-  const flatUpcharge = (qc ? 300 : 0) + (privateLabel ? 200 : 0);
-  const subtotal = units * (pool.unitPrice + perUnitUpcharge) + flatUpcharge;
-  const totalWithFee = subtotal * 1.03; // platform fee 3% included
-  const fmt = (n) =>
-    n.toLocaleString("en-US", { style: "currency", currency: pool.currency || "USD", maximumFractionDigits: 0 });
-
-  const submit = (e) => {
+  const handleJoin = (e) => {
     e.preventDefault();
-    const payload = {
-      poolId: pool.id,
-      units,
-      company,
-      contact,
-      site,
-      country,
-      notes,
-      upgrades: { rush, packaging, qc, privateLabel },
-      estimatedCharge: Number(totalWithFee.toFixed(2)),
-    };
-    console.log("JOIN PAYLOAD →", payload);
-    alert("Thanks! Your pledge has been recorded (demo).");
-    onClose();
+    // Redirect to full pool detail page instead of handling here
+    window.location.href = `/pool/${pool.id}`;
   };
 
+  const total = quantity * pool.unitPrice;
+
   return (
-    <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:p-8 overflow-y-auto" onClick={onClose}>
-      <div
-        className="relative w-full max-w-2xl rounded-2xl bg-white shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b bg-white rounded-t-2xl">
-          <h3 className="text-xl font-semibold text-slate-900">Join: {pool.title}</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-slate-900">Join Pool</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* content (scrollable) */}
-        <form onSubmit={submit} className="px-6 py-5 max-h-[80vh] overflow-y-auto">
-          {/* Units */}
-          <label className="block text-sm font-medium text-slate-900">
-            Units to pledge (min {pool.minUnits || 1})
-          </label>
-          <input
-            type="number"
-            min={pool.minUnits || 1}
-            value={units}
-            onChange={(e) => setUnits(Math.max(pool.minUnits || 1, Number(e.target.value || 0)))}
-            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
-          />
-          <p className="mt-2 text-xs text-slate-600">You can edit or cancel before the pool locks.</p>
+        <div className="mb-4">
+          <h4 className="font-medium text-slate-900">{pool.title}</h4>
+          <p className="text-sm text-slate-600">{pool.subtitle}</p>
+        </div>
 
-          {/* Estimated cost */}
-          <div className="mt-5">
-            <p className="text-sm font-medium text-slate-900">Estimated Cost (authorization at pledge)</p>
-            <div className="mt-1 text-3xl font-extrabold text-slate-900">{fmt(totalWithFee)}</div>
-            <p className="text-sm text-slate-600 mt-1">
-              {fmt(pool.unitPrice)} per {pool.unitLabel || "unit"} • Platform fee 3% included
-            </p>
-            <p className="text-xs text-slate-600">
-              Funds <span className="font-semibold">authorized now</span>, <span className="font-semibold">moved to escrow on lock</span>
+        <form onSubmit={handleJoin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Quantity ({pool.unitLabel})
+            </label>
+            <input
+              type="number"
+              min={pool.minUnits}
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || pool.minUnits)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Minimum: {pool.minUnits} {pool.unitLabel}
             </p>
           </div>
 
-          {/* Company / Contact / Site / Country */}
-          <div className="mt-6 grid gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-900">Company / Brand</label>
-              <input
-                placeholder="e.g., MP Global Exports"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              />
+          <div className="bg-slate-50 rounded-lg p-3">
+            <div className="flex justify-between text-sm">
+              <span>Unit price:</span>
+              <span>{pool.currency} {pool.unitPrice}</span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-900">Contact Name</label>
-              <input
-                placeholder="Your full name"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              />
+            <div className="flex justify-between text-sm">
+              <span>Quantity:</span>
+              <span>{quantity} {pool.unitLabel}</span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-900">Website / Social</label>
-              <input
-                placeholder="https://… or @handle"
-                value={site}
-                onChange={(e) => setSite(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-900">Country (USA-only for MVP)</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 bg-white"
-              >
-                <option>United States</option>
-                <option>Canada</option>
-                <option>Mexico</option>
-                <option>United Kingdom</option>
-                <option>Vietnam</option>
-                <option>Thailand</option>
-              </select>
+            <div className="border-t border-slate-200 mt-2 pt-2 flex justify-between font-medium">
+              <span>Total:</span>
+              <span>{pool.currency} {total.toFixed(2)}</span>
             </div>
           </div>
 
-          {/* Upgrades / Customizations */}
-          <div className="mt-6">
+          <div className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="mt-0.5"
+            />
+            <label htmlFor="terms" className="text-xs text-slate-600">
+              I agree to the terms and understand my funds will be held in escrow until the pool closes.
+              If MOQ isn't met, I'll receive a full refund.
+            </label>
+          </div>
+
+          <div className="flex gap-3">
             <button
               type="button"
-              onClick={() => setShowUpgrades((s) => !s)}
-              className="w-full flex items-center justify-between rounded-lg border border-slate-300 px-3 py-2 text-left"
+              onClick={onClose}
+              className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50"
             >
-              <span className="text-sm font-medium text-slate-900">Upgrades & Customizations (optional)</span>
-              <ChevronDown className={`h-4 w-4 transition ${showUpgrades ? "rotate-180" : ""}`} />
+              Cancel
             </button>
-
-            {showUpgrades && (
-              <div className="mt-3 space-y-3">
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" checked={rush} onChange={(e) => setRush(e.target.checked)} />
-                  <span className="text-sm text-slate-800">Rush processing <span className="text-slate-500">(+$2 / {pool.unitLabel || "unit"})</span></span>
-                </label>
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" checked={packaging} onChange={(e) => setPackaging(e.target.checked)} />
-                  <span className="text-sm text-slate-800">Custom packaging <span className="text-slate-500">(+$1.50 / {pool.unitLabel || "unit"})</span></span>
-                </label>
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" checked={qc} onChange={(e) => setQc(e.target.checked)} />
-                  <span className="text-sm text-slate-800">Third-party QC inspection <span className="text-slate-500">(+$300 flat)</span></span>
-                </label>
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" checked={privateLabel} onChange={(e) => setPrivateLabel(e.target.checked)} />
-                  <span className="text-sm text-slate-800">Private-label setup <span className="text-slate-500">(+$200 flat)</span></span>
-                </label>
-              </div>
-            )}
+            <button
+              type="submit"
+              disabled={!agreedToTerms}
+              className="flex-1 rounded-lg px-4 py-2 font-medium text-white disabled:opacity-50"
+              style={{ backgroundColor: colors.navy }}
+            >
+              View Full Details
+            </button>
           </div>
-
-          {/* Buyer note */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-slate-900">Notes for supplier (optional)</label>
-            <textarea
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Specs, delivery window, compliance requirements…"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-            />
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="mt-6 w-full rounded-lg px-4 py-3 font-medium text-white hover:opacity-90"
-            style={{ backgroundColor: colors.navy }}
-          >
-            Authorize & pledge
-          </button>
-
-          <p className="mt-3 text-xs text-slate-600 text-center">
-            You can cancel your commitment any time before the pool locks.
-          </p>
         </form>
+
+        <p className="text-xs text-slate-500 mt-3 text-center">
+          Powered by Stripe Connect • Escrow protected
+        </p>
       </div>
     </div>
   );
 }
 
-/* ===========================
-   POOL DETAILS MODAL (simple)
-   =========================== */
+// Pool Details Modal Component
 function PoolDetailsModal({ open, pool, onClose }) {
   if (!open || !pool) return null;
 
+  const handleViewPool = () => {
+    window.location.href = `/pool/${pool.id}`;
+  };
+
   return (
-    <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:p-8 overflow-y-auto" onClick={onClose}>
-      <div className="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b bg-white rounded-t-2xl">
-          <h3 className="text-xl font-semibold text-slate-900">{pool.title} — Details</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-slate-900">Pool Details</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="px-6 py-5 max-h-[80vh] overflow-y-auto">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
-              <img src={pool.image} alt={pool.title} className="w-full h-56 object-cover rounded-xl" />
-              <div className="mt-4">
-                <h4 className="font-semibold text-slate-900">Overview</h4>
-                <p className="text-sm text-slate-700 mt-1">
-                  {pool.subtitle}. Verified supplier. Escrow–backed payments via Stripe Connect. Optional third-party inspection available.
-                </p>
+        <div className="mb-6">
+          <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100 mb-4">
+            <img src={pool.image} alt={pool.title} className="h-full w-full object-cover" />
+          </div>
+          
+          <h4 className="text-xl font-semibold text-slate-900 mb-2">{pool.title}</h4>
+          <p className="text-slate-600 mb-4">{pool.subtitle}</p>
 
-                <h4 className="font-semibold text-slate-900 mt-4">Specs</h4>
-                <ul className="text-sm text-slate-700 list-disc pl-5 mt-1 space-y-1">
-                  <li>Unit price: ${pool.unitPrice} per {pool.unitLabel || "unit"} (ex-works)</li>
-                  <li>Minimum pledge: {pool.minUnits} {pool.unitLabel || "units"}</li>
-                  <li>Compliance: COA, MSDS on file (sample)</li>
-                  <li>Freight: pooled lanes available</li>
-                </ul>
-
-                <h4 className="font-semibold text-slate-900 mt-4">Timeline</h4>
-                <ol className="text-sm text-slate-700 list-decimal pl-5 mt-1 space-y-1">
-                  <li>Pool open — buyers join & pledge</li>
-                  <li>Pool locks — funds move to escrow; production starts</li>
-                  <li>Inspection (optional) — release balance</li>
-                  <li>Consolidated freight — delivery</li>
-                </ol>
-              </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p className="text-sm text-slate-500">Current Price</p>
+              <p className="text-2xl font-bold text-slate-900">{pool.price}</p>
             </div>
-
-            <div className="md:col-span-1">
-              <div className="rounded-xl border border-slate-200 p-4">
-                <p className="text-xs text-slate-600">Group progress</p>
-                <div className="mt-1 h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                  <div className="h-full" style={{ width: `${Math.round((pool.progress / pool.target) * 100)}%`, backgroundColor: colors.gold }} />
-                </div>
-                <p className="mt-2 text-sm text-slate-700">{pool.progress}/{pool.target} buyers joined</p>
-
-                <button
-                  onClick={() => {
-                    onClose();
-                    // open Join after closing details (little UX helper)
-                    const evt = new CustomEvent("open-join-from-details", { detail: pool });
-                    window.dispatchEvent(evt);
-                  }}
-                  className="mt-4 w-full rounded-lg px-4 py-2.5 font-medium text-white"
-                  style={{ backgroundColor: colors.navy }}
-                >
-                  Join this pool
-                </button>
-              </div>
+            <div>
+              <p className="text-sm text-slate-500">Progress</p>
+              <p className="text-lg font-semibold text-slate-900">{pool.progress}/{pool.target} joined</p>
             </div>
           </div>
+
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-slate-600 mb-1">
+              <span>Pool Progress</span>
+              <span>{Math.round((pool.progress / pool.target) * 100)}%</span>
+            </div>
+            <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full transition-all" 
+                style={{ 
+                  width: `${(pool.progress / pool.target) * 100}%`, 
+                  backgroundColor: colors.gold 
+                }} 
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span className="text-slate-600">Minimum Order:</span>
+              <span className="font-medium">{pool.minUnits} {pool.unitLabel}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-600">Unit Price:</span>
+              <span className="font-medium">{pool.currency} {pool.unitPrice}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-600">Category:</span>
+              <span className="font-medium">{pool.category}</span>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-slate-50 rounded-lg">
+            <h5 className="font-medium text-slate-900 mb-2">Pool Benefits</h5>
+            <ul className="space-y-1 text-sm text-slate-600">
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600" />
+                Factory pricing unlocked at MOQ
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600" />
+                Full refund if MOQ not met
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600" />
+                Pooled freight reduces shipping costs
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-600" />
+                Escrow protection via Stripe Connect
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-50"
+          >
+            Close
+          </button>
+          <button
+            onClick={handleViewPool}
+            className="flex-1 rounded-lg px-4 py-2 font-medium text-white"
+            style={{ backgroundColor: colors.navy }}
+          >
+            View Full Pool <ArrowUpRight className="ml-1 h-4 w-4" />
+          </button>
         </div>
       </div>
-
-      {/* bridge event so Details can open Join afterwards */}
-      <BridgeOpenJoin />
     </div>
   );
 }
 
-// Listens for the custom event fired in Details to open Join
-function BridgeOpenJoin() {
-  React.useEffect(() => {
-    const handler = (e) => {
-      setTimeout(() => {
-        const evt = new CustomEvent("bridge-open-join", { detail: e.detail });
-        window.dispatchEvent(evt);
-      }, 50);
-    };
-    window.addEventListener("open-join-from-details", handler);
-    return () => window.removeEventListener("open-join-from-details", handler);
-  }, []);
-  return null;
-}
-
-export default App; // ✅ only one default export
+// At the bottom of App.jsx
+export { SiteFooter };
+export default LandingPage;

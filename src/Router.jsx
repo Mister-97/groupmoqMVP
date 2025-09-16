@@ -1,17 +1,24 @@
 import React from "react";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
-import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext"; // Add this import
+import LandingPage from "./App";  // 
 import HowItWorksPage from "./pages/HowItWorksPage";
 import OpenPoolsPage from "./pages/OpenPoolsPage";
 import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";        // Add this
-import Dashboard from "./pages/Dashboard";          // Add this
-import ProfileSetup from "./pages/ProfileSetup";    // Add this
+import SignUpPage from "./pages/SignUpPage";
+import Dashboard from "./pages/Dashboard";
+import ProfileSetup from "./pages/ProfileSetup";
 import ForSuppliersPage from "./pages/ForSuppliersPage";
 import SupplierSetup from "./pages/SupplierSetup";
 import SupplierDashboard from "./pages/SupplierDashboard";
-
-
+// Import all your new pool pages
+import PoolCreation from './pages/PoolCreation';
+import PoolDetail from './pages/PoolDetail';
+import PoolBrowse from './pages/PoolBrowse';
+import MyPools from './pages/MyPools';
+import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
+import NotFound from './pages/NotFound';
 
 // Component to handle smooth scrolling when using #hash links
 function ScrollToHash() {
@@ -24,7 +31,7 @@ function ScrollToHash() {
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, 100);
+      }, [location.pathname, location.hash]);
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
@@ -34,20 +41,30 @@ function ScrollToHash() {
 
 export default function AppRouter() {
   return (
-    <HashRouter>
-      <ScrollToHash />
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/how-it-works" element={<HowItWorksPage />} />
-        <Route path="/pools" element={<OpenPoolsPage />} />
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />           {/* Add this */}
-        <Route path="/dashboard" element={<Dashboard />} />         {/* Add this */}
-        <Route path="/profile-setup" element={<ProfileSetup />} />  {/* Add this */}
-        <Route path="/suppliers" element={<ForSuppliersPage />} />
-        <Route path="/supplier-setup" element={<SupplierSetup />} />
-        <Route path="/supplier-dashboard" element={<SupplierDashboard />} />
-      </Routes>
-    </HashRouter>
+    <AuthProvider>
+      <HashRouter>
+        <ScrollToHash />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="/pools" element={<OpenPoolsPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile-setup" element={<ProfileSetup />} />
+          <Route path="/suppliers" element={<ForSuppliersPage />} />
+          <Route path="/supplier-setup" element={<SupplierSetup />} />
+          <Route path="/supplier-dashboard" element={<SupplierDashboard />} />
+          
+          {/* Add the new pool routes */}
+          <Route path="/pool/create" element={<PoolCreation />} />
+          <Route path="/pool/:poolId" element={<PoolDetail />} />
+          <Route path="/pool/:poolId/checkout" element={<Checkout />} />
+          <Route path="/my-pools" element={<MyPools />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </HashRouter>
+    </AuthProvider>
   );
 }

@@ -245,11 +245,4 @@ const OrderConfirmation = () => {
   );
 };
 
-export default OrderConfirmation;<span>Escrow protection - your money is safe until delivery</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Full refund if pool doesn't reach minimum quantity</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" />
+export default OrderConfirmation;
