@@ -1,6 +1,5 @@
 import React from "react";
-import { Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import {
   Users,
@@ -107,7 +106,6 @@ const ProtectedRoute = ({ children, requiredUserType = null }) => {
 // Public Route Component
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -130,15 +128,16 @@ const PublicRoute = ({ children }) => {
 // Authenticated Link Component - handles auth checks for navigation
 function AuthenticatedLink({ href, children, className, style, ...props }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleClick = (e) => {
     e.preventDefault();
     if (!user) {
       localStorage.setItem('redirectAfterLogin', href);
-      window.location.href = href;
+      navigate('/signin');
       return;
     }
-    window.location.href = href;
+    navigate(href);
   };
 
   return (
@@ -326,15 +325,16 @@ function LandingPage() {
 // Featured Pool Card Component
 function FeaturedPoolCard({ pool, onJoin, onDetails }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleViewPool = (e) => {
     e.preventDefault();
     if (!user) {
       localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
-      window.location.href = '/signin';
+      navigate('/signin');
       return;
     }
-    window.location.href = `/pool/${pool.id}`;
+    navigate(`/pool/${pool.id}`);
   };
 
   const handleDetailsClick = (e) => {
@@ -342,7 +342,7 @@ function FeaturedPoolCard({ pool, onJoin, onDetails }) {
     if (!user) {
       localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
       localStorage.setItem('pendingAction', 'details');
-      window.location.href = '/signin';
+      navigate('/signin');
       return;
     }
     onDetails();
@@ -620,16 +620,17 @@ function PoolsSection({ onJoin, onDetails }) {
 // Pool Card Component with Auth Checks
 function PoolCard({ pool, onJoin, onDetails }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const pct = Math.round((pool.progress / pool.target) * 100);
 
   const handleViewPool = (e) => {
     e.preventDefault();
     if (!user) {
       localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
-      window.location.href = '/signin';
+      navigate('/signin');
       return;
     }
-    window.location.href = `/pool/${pool.id}`;
+    navigate(`/pool/${pool.id}`);
   };
 
   const handleDetailsClick = (e) => {
@@ -637,7 +638,7 @@ function PoolCard({ pool, onJoin, onDetails }) {
     if (!user) {
       localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
       localStorage.setItem('pendingAction', 'details');
-      window.location.href = '/signin';
+      navigate('/signin');
       return;
     }
     onDetails();
@@ -1033,6 +1034,7 @@ function SiteFooter() {
 // Join Modal Component with Auth Checks
 function JoinModal({ open, pool, onClose }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = React.useState(pool?.minUnits || 1);
   const [agreedToTerms, setAgreedToTerms] = React.useState(false);
 
@@ -1052,12 +1054,12 @@ function JoinModal({ open, pool, onClose }) {
       localStorage.setItem('pendingAction', 'join');
       localStorage.setItem('pendingQuantity', quantity.toString());
       onClose();
-      window.location.href = `/signin`;
+      navigate('/signin');
       return;
     }
     
     // User is authenticated, redirect to full pool detail page
-    window.location.href = `/pool/${pool.id}`;
+    navigate(`/pool/${pool.id}`);
   };
 
   const total = quantity * pool.unitPrice;
@@ -1166,6 +1168,7 @@ function JoinModal({ open, pool, onClose }) {
 // Pool Details Modal Component with Auth Checks
 function PoolDetailsModal({ open, pool, onClose }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!open || !pool) return null;
 
@@ -1174,10 +1177,10 @@ function PoolDetailsModal({ open, pool, onClose }) {
     if (!user) {
       localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
       onClose();
-      window.location.href = '/signin';
+      navigate('/signin');
       return;
     }
-    window.location.href = `/pool/${pool.id}`;
+    navigate(`/pool/${pool.id}`);
   };
 
   return (

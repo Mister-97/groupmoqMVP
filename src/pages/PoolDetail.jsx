@@ -4,29 +4,25 @@ import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
   Package,
-  DollarSign,
-  Calendar,
   MapPin,
-  Truck,
-  FileText,
   Users,
   Clock,
   Shield,
   CheckCircle,
   Star,
-  AlertTriangle,
   Share2,
   Heart,
   MessageCircle,
   Eye,
-  Award,
-  Building,
-  Phone,
-  Mail
+  Building
 } from "lucide-react";
 import TopNav from "../components/TopNav";
 import { auth, db } from "../firebase";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+
+// Import assets
+import refinedSugar from "../assets/refinedsugar.png";
+import sugarHeader from "../assets/sugarheader.png";
 
 const colors = { navy: "#1B2A41", gold: "#F0A92D" };
 
@@ -44,25 +40,21 @@ export default function PoolDetail() {
 
   const loadPoolData = async () => {
     try {
-      // Load pool data from Firebase
       const poolDoc = await getDoc(doc(db, "pools", poolId));
       if (poolDoc.exists()) {
         const poolData = { id: poolDoc.id, ...poolDoc.data() };
         setPool(poolData);
         
-        // Load supplier data
         const supplierDoc = await getDoc(doc(db, "users", poolData.supplierId));
         if (supplierDoc.exists()) {
           setSupplier(supplierDoc.data());
         }
       } else {
-        // Mock data for testing
         setPool(mockPoolData);
         setSupplier(mockSupplierData);
       }
     } catch (error) {
       console.error("Error loading pool:", error);
-      // Fallback to mock data
       setPool(mockPoolData);
       setSupplier(mockSupplierData);
     } finally {
@@ -86,17 +78,14 @@ export default function PoolDetail() {
     participantCount: 28,
     poolDuration: "30",
     leadTime: "15-30",
-    deadline: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
+    deadline: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000),
     origin: "Santos, Brazil",
     shippingTerms: "FOB",
     availableLanes: ["US ↔ Brazil", "Europe ↔ Brazil"],
     paymentTerms: "escrow",
     status: "active",
-    createdAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
-    images: [
-      "https://images.unsplash.com/photo-1609501676725-7186f4f5a0ac?w=800",
-      "https://images.unsplash.com/photo-1582049803308-2a8e3ba75c8a?w=800"
-    ],
+    createdAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
+    images: [refinedSugar, sugarHeader],
     certifications: ["ISO 9001", "HACCP", "Organic"],
     customizations: "Private labeling available, custom packaging options"
   };
@@ -149,6 +138,11 @@ export default function PoolDetail() {
   const timeLeft = Math.max(0, Math.ceil((pool.deadline - new Date()) / (1000 * 60 * 60 * 24)));
   const isPoolActive = pool.status === "active" && timeLeft > 0;
 
+  const marketPrice = 520;
+  const savingsPerUnit = marketPrice - pool.unitPrice;
+  const savingsPercent = ((savingsPerUnit / marketPrice) * 100).toFixed(1);
+  const deadlineDate = new Date(pool.deadline).toLocaleDateString();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <TopNav />
@@ -168,29 +162,19 @@ export default function PoolDetail() {
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6">
               <div className="aspect-[16/9] bg-slate-100 relative">
                 {pool.images && pool.images.length > 0 ? (
-                  <img 
-                    src={pool.images[0]} 
-                    alt={pool.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={pool.images[0]} alt={pool.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <Package className="h-16 w-16 text-slate-400" />
                   </div>
                 )}
-                
-                {/* Status Badge */}
                 <div className="absolute top-4 left-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    isPoolActive 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
+                    isPoolActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                   }`}>
                     {isPoolActive ? 'Active' : 'Closed'}
                   </span>
                 </div>
-
-                {/* Actions */}
                 <div className="absolute top-4 right-4 flex gap-2">
                   <button className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors">
                     <Share2 className="h-4 w-4 text-slate-600" />
@@ -222,10 +206,12 @@ export default function PoolDetail() {
                     </span>
                   </div>
                 </div>
-                
                 <div className="text-right">
                   <p className="text-3xl font-bold text-slate-900">${pool.unitPrice}</p>
                   <p className="text-sm text-slate-600">per {pool.unit}</p>
+                  <p className="text-xs text-green-600 mt-1">
+                    Save ${savingsPerUnit}/{pool.unit} ({savingsPercent}% vs market avg ${marketPrice})
+                  </p>
                 </div>
               </div>
 
@@ -243,7 +229,7 @@ export default function PoolDetail() {
                 </div>
                 <div className="flex justify-between text-xs text-slate-500 mt-1">
                   <span>{Math.round(progress)}% funded</span>
-                  <span>{timeLeft} days left</span>
+                  <span>Join before {deadlineDate}</span>
                 </div>
               </div>
 
@@ -254,7 +240,7 @@ export default function PoolDetail() {
                     <Users className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="font-semibold text-slate-900">{pool.participantCount}</p>
-                  <p className="text-xs text-slate-600">Participants</p>
+                  <p className="text-xs text-slate-600">Businesses already joined</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full mx-auto mb-2">
@@ -268,12 +254,12 @@ export default function PoolDetail() {
                     <Shield className="h-5 w-5 text-purple-600" />
                   </div>
                   <p className="font-semibold text-slate-900">Escrow</p>
-                  <p className="text-xs text-slate-600">Protected</p>
+                  <p className="text-xs text-slate-600">Funds held until delivery</p>
                 </div>
               </div>
             </div>
 
-            {/* Description & Specs */}
+            {/* Product Description */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
               <h2 className="text-xl font-semibold text-slate-900 mb-4">Product Description</h2>
               <p className="text-slate-700 mb-6 leading-relaxed">{pool.description}</p>
@@ -298,10 +284,10 @@ export default function PoolDetail() {
             </div>
 
             {/* Shipping & Terms */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
               <h2 className="text-xl font-semibold text-slate-900 mb-4">Shipping & Terms</h2>
               
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6 items-start">
                 <div>
                   <h3 className="font-medium text-slate-900 mb-2">Shipping Details</h3>
                   <div className="space-y-2 text-sm">
@@ -346,9 +332,13 @@ export default function PoolDetail() {
             {/* Join Pool Card */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
               <div className="text-center mb-4">
-                <p className="text-2xl font-bold text-slate-900">${pool.unitPrice * pool.moq}</p>
-                <p className="text-sm text-slate-600">Total pool value</p>
-              </div>
+  <p className="text-2xl font-bold text-slate-900">{pool.moq} {pool.unit}</p>
+  <p className="text-sm text-slate-600">MOQ Goal</p>
+  <p className="text-sm text-green-600 mt-1">
+    {pool.currentQuantity}/{pool.moq} {pool.unit} committed
+  </p>
+</div>
+
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
@@ -381,19 +371,9 @@ export default function PoolDetail() {
                 </button>
               )}
 
-              <div className="flex gap-2 mt-3">
-                <button className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-lg text-sm hover:bg-slate-50">
-                  <MessageCircle className="h-4 w-4 inline mr-2" />
-                  Message Supplier
-                </button>
-                <button className="flex-1 border border-slate-300 text-slate-700 py-2 rounded-lg text-sm hover:bg-slate-50">
-                  Request Quote
-                </button>
-              </div>
-
               <div className="mt-4 text-xs text-slate-500 text-center">
                 <Shield className="h-3 w-3 inline mr-1" />
-                100% refund if MOQ not met
+                Escrow holds funds until delivery, protecting your order
               </div>
             </div>
 
@@ -442,13 +422,9 @@ export default function PoolDetail() {
               </div>
 
               <div className="flex gap-2 mt-4">
-                <button className="flex items-center justify-center gap-1 px-3 py-2 border border-slate-300 rounded-lg text-sm hover:bg-slate-50">
-                  <Phone className="h-3 w-3" />
-                  Call
-                </button>
-                <button className="flex items-center justify-center gap-1 px-3 py-2 border border-slate-300 rounded-lg text-sm hover:bg-slate-50">
-                  <Mail className="h-3 w-3" />
-                  Email
+                <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-slate-300 rounded-lg text-sm hover:bg-slate-50">
+                  <MessageCircle className="h-4 w-4" />
+                  Ask GroupMOQ
                 </button>
                 <button className="flex-1 px-3 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm hover:bg-slate-200">
                   View Profile
@@ -482,17 +458,12 @@ export default function PoolDetail() {
         </div>
       </div>
 
-      {/* Join Pool Modal */}
       {joinModalOpen && (
         <JoinPoolModal 
           pool={pool}
           isOpen={joinModalOpen}
           onClose={() => setJoinModalOpen(false)}
-          onSuccess={() => {
-            setJoinModalOpen(false);
-            // Refresh pool data
-            loadPoolData();
-          }}
+          onSuccess={() => loadPoolData()}
         />
       )}
     </div>
@@ -503,6 +474,7 @@ export default function PoolDetail() {
 function JoinPoolModal({ pool, isOpen, onClose, onSuccess }) {
   const [quantity, setQuantity] = useState(Math.ceil(pool.moq / 20));
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   if (!isOpen) return null;
 
@@ -513,10 +485,8 @@ function JoinPoolModal({ pool, isOpen, onClose, onSuccess }) {
   const handleJoin = async () => {
     setLoading(true);
     try {
-      // Mock join process
       await new Promise(resolve => setTimeout(resolve, 1500));
-      alert(`Successfully joined pool with ${quantity} ${pool.unit}!`);
-      onSuccess();
+      setSuccess(true);
     } catch (error) {
       alert("Failed to join pool: " + error.message);
     } finally {
@@ -524,61 +494,81 @@ function JoinPoolModal({ pool, isOpen, onClose, onSuccess }) {
     }
   };
 
+  const handleClose = () => {
+    setSuccess(false);
+    onSuccess();
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-        <h3 className="text-xl font-semibold text-slate-900 mb-4">Join Pool</h3>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Quantity ({pool.unit})
-            </label>
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+        {!success ? (
+          <>
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">Join Pool</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Quantity ({pool.unit})
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
 
-          <div className="bg-slate-50 rounded-lg p-4 space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>Subtotal:</span>
-              <span>${totalCost.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Platform fee (3%):</span>
-              <span>${platformFee.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between font-semibold text-base pt-2 border-t">
-              <span>Total:</span>
-              <span>${finalTotal.toFixed(2)}</span>
-            </div>
-          </div>
+              <div className="bg-slate-50 rounded-lg p-4 space-y-2 text-sm">
+                <div className="flex justify-between font-semibold text-base">
+                  <span>Total:</span>
+                  <span>${finalTotal.toFixed(2)}</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Includes escrow protection & platform services (3%)
+                </p>
+              </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-            <Shield className="h-4 w-4 inline mr-1" />
-            Funds will be held in escrow until delivery
-          </div>
-        </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                <Shield className="h-4 w-4 inline mr-1" />
+                Funds will be held in escrow until delivery
+              </div>
+            </div>
 
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleJoin}
-            disabled={loading}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Joining...' : 'Join Pool'}
-          </button>
-        </div>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={onClose}
+                className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleJoin}
+                disabled={loading}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? 'Joining...' : 'Join Pool'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h3 className="text-xl font-semibold text-green-700 mb-4">Success!</h3>
+            <p className="text-slate-800 mb-6 text-center">
+              Successfully joined pool with <strong>{quantity} {pool.unit}</strong>!
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleClose}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Close
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
