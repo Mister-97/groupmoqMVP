@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext"; // Add this import
 import LandingPage from "./App";  // 
 import HowItWorksPage from "./pages/HowItWorksPage";
@@ -31,7 +31,7 @@ function ScrollToHash() {
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }, [location.pathname, location.hash]);
+      }, 100);
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
@@ -42,7 +42,7 @@ function ScrollToHash() {
 export default function AppRouter() {
   return (
     <AuthProvider>
-      <HashRouter>
+      <BrowserRouter basename="/groupmoqMVP">
         <ScrollToHash />
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -64,7 +64,7 @@ export default function AppRouter() {
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </AuthProvider>
   );
 }

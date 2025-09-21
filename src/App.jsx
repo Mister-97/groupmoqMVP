@@ -1,5 +1,6 @@
 import React from "react";
-import { Navigate } from 'react-router-dom'; // ADD THIS LINE
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import {
   Users,
@@ -26,16 +27,28 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-// Firebase Auth Context (assuming you have this)
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/signin" element={<PublicRoute><SignInPage /></PublicRoute>} />
+      <Route path="/signup" element={<PublicRoute><SignUpPage /></PublicRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      {/* etc */}
+    </Routes>
+  );
+}
+
+// Firebase Auth Context
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-// Existing pages (keep as-is)
+// Existing pages
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfileSetup from "./pages/ProfileSetup";
 import Dashboard from "./pages/Dashboard";
 
-// NEW Pool marketplace pages
+// Pool marketplace pages
 import PoolCreation from './pages/PoolCreation';
 import PoolDetail from './pages/PoolDetail';
 import PoolBrowse from './pages/PoolBrowse';
@@ -63,7 +76,6 @@ const colors = {
   gold: "#F0A92D",
   bgLight: "#F7F5F2",
 };
-
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredUserType = null }) => {
@@ -95,6 +107,7 @@ const ProtectedRoute = ({ children, requiredUserType = null }) => {
 // Public Route Component
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -114,6 +127,31 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+// Authenticated Link Component - handles auth checks for navigation
+function AuthenticatedLink({ href, children, className, style, ...props }) {
+  const { user } = useAuth();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', href);
+      window.location.href = href;
+      return;
+    }
+    window.location.href = href;
+  };
+
+  return (
+    <button 
+      onClick={handleClick} 
+      className={className} 
+      style={style} 
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
 
 // Landing Page Component
 function LandingPage() {
@@ -172,13 +210,17 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-55 pt-55">
           <div className="flex items-center justify-center gap-14 overflow-x-auto">
             {[
-  { label: "Sugar", link: "/pools?category=sugar", image: sugarHeader },
-  { label: "Coffee Beans", link: "/pools?category=coffee", image: coffeeHeader },
-  { label: "Cooking Oils", link: "/pools?category=oils", image: fabricsHeader }, // Reusing fabricsHeader temporarily
-  { label: "Rice", link: "/pools?category=rice", image: metalsHeader }, // Reusing metalsHeader temporarily  
-  { label: "Flour", link: "/pools?category=flour", image: hairHeader }, // Reusing hairHeader temporarily
-].map((c) => (
-              <a key={c.label} href={c.link} className="flex flex-col items-center gap-3 group p-1">
+              { label: "Sugar", link: "/pools?category=sugar", image: sugarHeader },
+              { label: "Coffee Beans", link: "/pools?category=coffee", image: coffeeHeader },
+              { label: "Cooking Oils", link: "/pools?category=oils", image: fabricsHeader },
+              { label: "Rice", link: "/pools?category=rice", image: metalsHeader },
+              { label: "Flour", link: "/pools?category=flour", image: hairHeader },
+            ].map((c) => (
+              <AuthenticatedLink 
+                key={c.label} 
+                href={c.link} 
+                className="flex flex-col items-center gap-3 group p-1"
+              >
                 <div
                   className="h-24 w-24 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm ring-0 group-hover:ring-2 transition"
                   style={{ "--tw-ring-color": colors.gold }}
@@ -186,7 +228,7 @@ function LandingPage() {
                   <img src={c.image} alt={c.label} className="h-full w-full object-cover" />
                 </div>
                 <span className="text-slate-800 text-sm font-medium">{c.label}</span>
-              </a>
+              </AuthenticatedLink>
             ))}
           </div>
         </div>
@@ -217,20 +259,20 @@ function LandingPage() {
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a
+              <AuthenticatedLink
                 href="/pools"
                 className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
                 style={{ backgroundColor: colors.navy }}
               >
                 Browse Pools
-              </a>
-              <a
+              </AuthenticatedLink>
+              <AuthenticatedLink
                 href="/pool/create"
                 className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50"
                 style={{ borderColor: colors.navy }}
               >
                 Start a new pool
-              </a>
+              </AuthenticatedLink>
             </div>
 
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
@@ -259,73 +301,11 @@ function LandingPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="lg:col-span-6"
           >
-            <div className="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-slate-700 text-sm">Featured pool</span>
-                <span
-                  className="rounded-md px-2 py-1 text-xs text-slate-900"
-                  style={{ backgroundColor: colors.bgLight }}
-                >
-                  Ends in 3d 12h
-                </span>
-              </div>
-              <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100">
-                <img
-                  src={refinedSugar}
-                  alt="Refined sugar crystals"
-                  className="h-full w-full object-cover"
-                  loading="eager"
-                />
-              </div>
-              <div className="mt-5 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-slate-900 font-semibold">ICUMSA-45 Refined Sugar</h3>
-                  <p className="text-slate-600 text-sm">MOQ 10 MT • Saigon/Laem Chabang lanes</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-2xl font-extrabold text-slate-900">$XXX/MT</p>
-                  <p className="text-slate-500 text-xs line-through">$YYY/MT</p>
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <div className="flex justify-between text-xs text-slate-600 mb-1">
-                  <span>Group progress</span>
-                  <span>63/100 joined</span>
-                </div>
-                <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                  <div className="h-full" style={{ width: "63%", backgroundColor: colors.gold }} />
-                </div>
-                <p className="mt-2 text-xs text-slate-600">
-                  More buyers, lower prices. If MOQ isn't met, everyone gets a full refund.
-                </p>
-              </div>
-
-              <div className="mt-5 grid sm:grid-cols-2 gap-3">
-                <a
-                  href="/pool/sugar-icumsa-45"
-                  className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 font-medium text-white hover:opacity-90"
-                  style={{ backgroundColor: colors.navy }}
-                >
-                  View Pool
-                </a>
-                <button
-                  onClick={() => openDetails(featuredPool)}
-                  className="rounded-lg border px-4 py-2.5 text-slate-900 hover:bg-slate-50"
-                  style={{ borderColor: colors.navy }}
-                >
-                  View details
-                </button>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-                <span>✅ Full refund if MOQ not met</span>
-                <span>•</span>
-                <span>✅ Compliance docs uploaded</span>
-                <span>•</span>
-                <span>✅ Third-party inspection available</span>
-              </div>
-            </div>
+            <FeaturedPoolCard 
+              pool={featuredPool} 
+              onJoin={() => openJoin(featuredPool)} 
+              onDetails={() => openDetails(featuredPool)} 
+            />
           </motion.div>
         </div>
       </section>
@@ -339,6 +319,102 @@ function LandingPage() {
 
       <JoinModal open={joinOpen} pool={activePool} onClose={closeJoin} />
       <PoolDetailsModal open={detailsOpen} pool={activePool} onClose={closeDetails} />
+    </div>
+  );
+}
+
+// Featured Pool Card Component
+function FeaturedPoolCard({ pool, onJoin, onDetails }) {
+  const { user } = useAuth();
+
+  const handleViewPool = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      window.location.href = '/signin';
+      return;
+    }
+    window.location.href = `/pool/${pool.id}`;
+  };
+
+  const handleDetailsClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      localStorage.setItem('pendingAction', 'details');
+      window.location.href = '/signin';
+      return;
+    }
+    onDetails();
+  };
+
+  return (
+    <div className="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-slate-700 text-sm">Featured pool</span>
+        <span
+          className="rounded-md px-2 py-1 text-xs text-slate-900"
+          style={{ backgroundColor: colors.bgLight }}
+        >
+          Ends in 3d 12h
+        </span>
+      </div>
+      <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-slate-100">
+        <img
+          src={pool.image}
+          alt="Refined sugar crystals"
+          className="h-full w-full object-cover"
+          loading="eager"
+        />
+      </div>
+      <div className="mt-5 flex items-start justify-between gap-4">
+        <div>
+          <h3 className="text-slate-900 font-semibold">{pool.title}</h3>
+          <p className="text-slate-600 text-sm">{pool.subtitle}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-extrabold text-slate-900">{pool.price}</p>
+          <p className="text-slate-500 text-xs line-through">{pool.oldPrice}</p>
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <div className="flex justify-between text-xs text-slate-600 mb-1">
+          <span>Group progress</span>
+          <span>{pool.progress}/{pool.target} joined</span>
+        </div>
+        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-full" style={{ width: "63%", backgroundColor: colors.gold }} />
+        </div>
+        <p className="mt-2 text-xs text-slate-600">
+          More buyers, lower prices. If MOQ isn't met, everyone gets a full refund.
+        </p>
+      </div>
+
+      <div className="mt-5 grid sm:grid-cols-2 gap-3">
+        <button
+          onClick={handleViewPool}
+          className="inline-flex items-center justify-center rounded-lg px-4 py-2.5 font-medium text-white hover:opacity-90"
+          style={{ backgroundColor: colors.navy }}
+        >
+          {!user ? 'Sign In to View' : 'View Pool'}
+        </button>
+        <button
+          onClick={handleDetailsClick}
+          className="rounded-lg border px-4 py-2.5 text-slate-900 hover:bg-slate-50"
+          style={{ borderColor: colors.navy }}
+        >
+          View details
+        </button>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+        <span>✅ Full refund if MOQ not met</span>
+        <span>•</span>
+        <span>✅ Compliance docs uploaded</span>
+        <span>•</span>
+        <span>✅ Third-party inspection available</span>
+      </div>
     </div>
   );
 }
@@ -528,21 +604,45 @@ function PoolsSection({ onJoin, onDetails }) {
         </div>
 
         <div className="mt-8 text-center">
-          <a
+          <AuthenticatedLink
             href="/pools"
             className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
             style={{ backgroundColor: colors.navy }}
           >
             View All Pools <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
+          </AuthenticatedLink>
         </div>
       </div>
     </section>
   );
 }
 
+// Pool Card Component with Auth Checks
 function PoolCard({ pool, onJoin, onDetails }) {
+  const { user } = useAuth();
   const pct = Math.round((pool.progress / pool.target) * 100);
+
+  const handleViewPool = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      window.location.href = '/signin';
+      return;
+    }
+    window.location.href = `/pool/${pool.id}`;
+  };
+
+  const handleDetailsClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      localStorage.setItem('pendingAction', 'details');
+      window.location.href = '/signin';
+      return;
+    }
+    onDetails();
+  };
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100 relative">
@@ -568,15 +668,15 @@ function PoolCard({ pool, onJoin, onDetails }) {
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <a 
-          href={`/pool/${pool.id}`}
+        <button 
+          onClick={handleViewPool}
           className="inline-flex items-center justify-center rounded-lg px-3 py-2 font-medium text-white hover:opacity-90" 
           style={{ backgroundColor: colors.navy }}
         >
-          View Pool
-        </a>
+          {!user ? 'Sign In to View' : 'View Pool'}
+        </button>
         <button 
-          onClick={onDetails} 
+          onClick={handleDetailsClick} 
           className="rounded-lg border px-3 py-2 text-slate-900 hover:bg-slate-50" 
           style={{ borderColor: colors.navy }}
         >
@@ -657,13 +757,13 @@ function MadeInUSASection({ onJoin, onDetails }) {
         </div>
 
         <div className="mt-8 text-center">
-          <a
+          <AuthenticatedLink
             href="/pools?category=usa"
             className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90"
             style={{ backgroundColor: colors.navy }}
           >
             View all USA pools <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
+          </AuthenticatedLink>
         </div>
       </div>
     </section>
@@ -707,9 +807,13 @@ function SupplierBand() {
               <li className="flex items-center gap-2"><Truck className="h-5 w-5 text-white" /> Access pooled freight</li>
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/register?type=supplier" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
+              <AuthenticatedLink 
+                href="/register?type=supplier" 
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" 
+                style={{ backgroundColor: colors.gold }}
+              >
                 Apply to list <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
+              </AuthenticatedLink>
               <a href="#faq" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
                 Learn more
               </a>
@@ -760,9 +864,12 @@ function SupplierBand() {
                 <button type="submit" className="inline-flex items-center justify-center rounded-xl px-5 py-3 font-medium text-navy-900" style={{ backgroundColor: colors.gold }}>
                   Send suggestion <Send className="ml-2 h-4 w-4" />
                 </button>
-                <a href="/pools" className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10">
+                <AuthenticatedLink 
+                  href="/pools" 
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-white/90 hover:bg-white/10"
+                >
                   See open pools
-                </a>
+                </AuthenticatedLink>
               </div>
             </form>
           </div>
@@ -828,12 +935,20 @@ function AfterSupplierInfo() {
             <p className="text-slate-800"><span className="font-semibold">Full refund if MOQ isn't met.</span> Your commitment is held in escrow with Stripe Connect until the pool closes.</p>
           </div>
           <div className="flex gap-3">
-            <a href="/pools" className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" style={{ backgroundColor: colors.navy }}>
+            <AuthenticatedLink 
+              href="/pools" 
+              className="inline-flex items-center justify-center rounded-lg px-5 py-3 font-medium text-white hover:opacity-90" 
+              style={{ backgroundColor: colors.navy }}
+            >
               Start now <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
-            <a href="/pool/create" className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" style={{ borderColor: colors.navy }}>
+            </AuthenticatedLink>
+            <AuthenticatedLink 
+              href="/pool/create" 
+              className="inline-flex items-center justify-center rounded-lg border px-5 py-3 text-slate-900 hover:bg-slate-50" 
+              style={{ borderColor: colors.navy }}
+            >
               Start a new pool
-            </a>
+            </AuthenticatedLink>
           </div>
         </div>
       </div>
@@ -876,10 +991,10 @@ function SiteFooter() {
           <div>
             <h3 className="font-semibold">Platform</h3>
             <ul className="mt-3 space-y-2 text-sm text-slate-400">
-              <li><a href="/pools" className="hover:text-white">Browse Pools</a></li>
-              <li><a href="/pool/create" className="hover:text-white">Start a Pool</a></li>
-              <li><a href="/my-pools" className="hover:text-white">My Pools</a></li>
-              <li><a href="/dashboard" className="hover:text-white">Dashboard</a></li>
+              <li><AuthenticatedLink href="/pools" className="hover:text-white">Browse Pools</AuthenticatedLink></li>
+              <li><AuthenticatedLink href="/pool/create" className="hover:text-white">Start a Pool</AuthenticatedLink></li>
+              <li><AuthenticatedLink href="/my-pools" className="hover:text-white">My Pools</AuthenticatedLink></li>
+              <li><AuthenticatedLink href="/dashboard" className="hover:text-white">Dashboard</AuthenticatedLink></li>
             </ul>
           </div>
 
@@ -888,7 +1003,7 @@ function SiteFooter() {
             <ul className="mt-3 space-y-2 text-sm text-slate-400">
               <li><a href="#how" className="hover:text-white">How it Works</a></li>
               <li><a href="#suppliers" className="hover:text-white">For Suppliers</a></li>
-              <li><a href="/register?type=supplier" className="hover:text-white">Apply to List</a></li>
+              <li><AuthenticatedLink href="/register?type=supplier" className="hover:text-white">Apply to List</AuthenticatedLink></li>
               <li><a href="/contact" className="hover:text-white">Contact</a></li>
             </ul>
           </div>
@@ -915,8 +1030,9 @@ function SiteFooter() {
   );
 }
 
-// Join Modal Component
+// Join Modal Component with Auth Checks
 function JoinModal({ open, pool, onClose }) {
+  const { user } = useAuth();
   const [quantity, setQuantity] = React.useState(pool?.minUnits || 1);
   const [agreedToTerms, setAgreedToTerms] = React.useState(false);
 
@@ -930,7 +1046,17 @@ function JoinModal({ open, pool, onClose }) {
 
   const handleJoin = (e) => {
     e.preventDefault();
-    // Redirect to full pool detail page instead of handling here
+    
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      localStorage.setItem('pendingAction', 'join');
+      localStorage.setItem('pendingQuantity', quantity.toString());
+      onClose();
+      window.location.href = `/signin`;
+      return;
+    }
+    
+    // User is authenticated, redirect to full pool detail page
     window.location.href = `/pool/${pool.id}`;
   };
 
@@ -940,11 +1066,21 @@ function JoinModal({ open, pool, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-slate-900">Join Pool</h3>
+          <h3 className="text-lg font-semibold text-slate-900">
+            {!user ? 'Sign In Required' : 'Join Pool'}
+          </h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <X className="h-5 w-5" />
           </button>
         </div>
+
+        {!user && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              You need to sign in to join pools and access wholesale pricing.
+            </p>
+          </div>
+        )}
 
         <div className="mb-4">
           <h4 className="font-medium text-slate-900">{pool.title}</h4>
@@ -962,6 +1098,7 @@ function JoinModal({ open, pool, onClose }) {
               value={quantity}
               onChange={(e) => setQuantity(parseInt(e.target.value) || pool.minUnits)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={!user}
             />
             <p className="text-xs text-slate-500 mt-1">
               Minimum: {pool.minUnits} {pool.unitLabel}
@@ -983,19 +1120,21 @@ function JoinModal({ open, pool, onClose }) {
             </div>
           </div>
 
-          <div className="flex items-start gap-2">
-            <input
-              type="checkbox"
-              id="terms"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="mt-0.5"
-            />
-            <label htmlFor="terms" className="text-xs text-slate-600">
-              I agree to the terms and understand my funds will be held in escrow until the pool closes.
-              If MOQ isn't met, I'll receive a full refund.
-            </label>
-          </div>
+          {user && (
+            <div className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mt-0.5"
+              />
+              <label htmlFor="terms" className="text-xs text-slate-600">
+                I agree to the terms and understand my funds will be held in escrow until the pool closes.
+                If MOQ isn't met, I'll receive a full refund.
+              </label>
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button
@@ -1007,11 +1146,11 @@ function JoinModal({ open, pool, onClose }) {
             </button>
             <button
               type="submit"
-              disabled={!agreedToTerms}
+              disabled={user && !agreedToTerms}
               className="flex-1 rounded-lg px-4 py-2 font-medium text-white disabled:opacity-50"
               style={{ backgroundColor: colors.navy }}
             >
-              View Full Details
+              {!user ? 'Sign In to Continue' : 'View Full Details'}
             </button>
           </div>
         </form>
@@ -1024,11 +1163,20 @@ function JoinModal({ open, pool, onClose }) {
   );
 }
 
-// Pool Details Modal Component
+// Pool Details Modal Component with Auth Checks
 function PoolDetailsModal({ open, pool, onClose }) {
+  const { user } = useAuth();
+
   if (!open || !pool) return null;
 
-  const handleViewPool = () => {
+  const handleViewPool = (e) => {
+    e.preventDefault();
+    if (!user) {
+      localStorage.setItem('redirectAfterLogin', `/pool/${pool.id}`);
+      onClose();
+      window.location.href = '/signin';
+      return;
+    }
     window.location.href = `/pool/${pool.id}`;
   };
 
@@ -1041,6 +1189,14 @@ function PoolDetailsModal({ open, pool, onClose }) {
             <X className="h-5 w-5" />
           </button>
         </div>
+
+        {!user && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              Sign in to join this pool and access wholesale pricing.
+            </p>
+          </div>
+        )}
 
         <div className="mb-6">
           <div className="aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100 mb-4">
@@ -1127,7 +1283,7 @@ function PoolDetailsModal({ open, pool, onClose }) {
             className="flex-1 rounded-lg px-4 py-2 font-medium text-white"
             style={{ backgroundColor: colors.navy }}
           >
-            View Full Pool <ArrowUpRight className="ml-1 h-4 w-4" />
+            {!user ? 'Sign In to View Pool' : 'View Full Pool'} <ArrowUpRight className="ml-1 h-4 w-4" />
           </button>
         </div>
       </div>
@@ -1135,6 +1291,6 @@ function PoolDetailsModal({ open, pool, onClose }) {
   );
 }
 
-// At the bottom of App.jsx
+// Export components
 export { SiteFooter };
 export default LandingPage;
